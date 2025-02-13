@@ -63,23 +63,30 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // 初始化背景设置
-function initBackgroundSettings() {
+async function initBackgroundSettings() {
     const bgToggle = document.getElementById('bgToggle');
     const bgSettings = document.getElementById('bgSettings');
     const bgInput = document.getElementById('bgInput');
     const bgApply = document.getElementById('bgApply');
     const bgReset = document.getElementById('bgReset');
 
-    // 加载保存的背景
-    const currentBg = localStorage.getItem('currentBackground');
-    const savedBgs = JSON.parse(localStorage.getItem('savedBackgrounds')) || [];
-    
-    if (currentBg) {
-        document.body.style.setProperty('--bg-image', `url('${currentBg}')`);
+    // 从服务器加载背景设置
+    try {
+        const response = await fetch('/api/background');
+        const data = await response.json();
+        if (data) {
+            const settings = JSON.parse(data);
+            if (settings.currentBackground) {
+                document.body.style.setProperty('--bg-image', `url('${settings.currentBackground}')`);
+            }
+            updateBgList(settings.savedBackgrounds || []);
+        }
+    } catch (error) {
+        console.error('Failed to load background settings:', error);
     }
 
     // 更新背景列表显示
-    function updateBgList() {
+    function updateBgList(savedBgs = []) {
         const bgList = document.getElementById('bgList');
         if (!bgList) return;
         
@@ -100,24 +107,48 @@ function initBackgroundSettings() {
     });
 
     // 应用新背景
-    bgApply.addEventListener('click', () => {
+    bgApply.addEventListener('click', async () => {
         const url = bgInput.value.trim();
         if (url) {
-            if (!savedBgs.includes(url)) {
-                savedBgs.push(url);
-                localStorage.setItem('savedBackgrounds', JSON.stringify(savedBgs));
+            try {
+                const response = await fetch('/api/background');
+                const data = await response.json();
+                const settings = data ? JSON.parse(data) : { savedBackgrounds: [] };
+                
+                if (!settings.savedBackgrounds.includes(url)) {
+                    settings.savedBackgrounds.push(url);
+                }
+                settings.currentBackground = url;
+                
+                await fetch('/api/background', {
+                    method: 'POST',
+                    body: JSON.stringify(settings)
+                });
+
+                document.body.style.setProperty('--bg-image', `url('${url}')`);
+                bgInput.value = '';
+                updateBgList(settings.savedBackgrounds);
+            } catch (error) {
+                console.error('Failed to save background:', error);
             }
-            applyBackground(url);
-            bgInput.value = '';
-            updateBgList();
         }
     });
 
     // 重置背景
-    bgReset.addEventListener('click', () => {
-        document.body.style.removeProperty('--bg-image');
-        localStorage.removeItem('currentBackground');
-        bgSettings.classList.remove('active');
+    bgReset.addEventListener('click', async () => {
+        try {
+            const settings = { savedBackgrounds: [], currentBackground: null };
+            await fetch('/api/background', {
+                method: 'POST',
+                body: JSON.stringify(settings)
+            });
+            
+            document.body.style.removeProperty('--bg-image');
+            updateBgList([]);
+            bgSettings.classList.remove('active');
+        } catch (error) {
+            console.error('Failed to reset background:', error);
+        }
     });
 
     // 点击外部关闭设置面板
@@ -126,42 +157,62 @@ function initBackgroundSettings() {
             bgSettings.classList.remove('active');
         }
     });
-
-    // 初始化显示背景列表
-    updateBgList();
 }
 
 // 应用背景
-function applyBackground(url) {
-    document.body.style.setProperty('--bg-image', `url('${url}')`);
-    localStorage.setItem('currentBackground', url);
+async function applyBackground(url) {
+    try {
+        const response = await fetch('/api/background');
+        const data = await response.json();
+        const settings = data ? JSON.parse(data) : { savedBackgrounds: [] };
+        
+        settings.currentBackground = url;
+        
+        await fetch('/api/background', {
+            method: 'POST',
+            body: JSON.stringify(settings)
+        });
+
+        document.body.style.setProperty('--bg-image', `url('${url}')`);
+    } catch (error) {
+        console.error('Failed to apply background:', error);
+    }
 }
 
 // 删除背景
-function deleteBackground(index) {
-    const savedBgs = JSON.parse(localStorage.getItem('savedBackgrounds')) || [];
-    const deletedBg = savedBgs[index];
-    savedBgs.splice(index, 1);
-    localStorage.setItem('savedBackgrounds', JSON.stringify(savedBgs));
-    
-    // 如果删除的是当前使用的背景，则重置为默认背景
-    if (deletedBg === localStorage.getItem('currentBackground')) {
-        document.body.style.removeProperty('--bg-image');
-        localStorage.removeItem('currentBackground');
-    }
-    
-    // 更新背景列表显示
-    const bgList = document.getElementById('bgList');
-    if (bgList) {
-        bgList.innerHTML = savedBgs.map((bg, i) => `
-            <div class="bg-item">
-                <img src="${bg}" alt="背景预览" class="bg-preview">
-                <div class="bg-item-actions">
-                    <button class="bg-item-btn" onclick="applyBackground('${bg}')">使用</button>
-                    <button class="bg-item-btn delete" onclick="deleteBackground(${i})">删除</button>
+async function deleteBackground(index) {
+    try {
+        const response = await fetch('/api/background');
+        const data = await response.json();
+        const settings = data ? JSON.parse(data) : { savedBackgrounds: [] };
+        
+        const deletedBg = settings.savedBackgrounds[index];
+        settings.savedBackgrounds.splice(index, 1);
+        
+        if (deletedBg === settings.currentBackground) {
+            settings.currentBackground = null;
+            document.body.style.removeProperty('--bg-image');
+        }
+        
+        await fetch('/api/background', {
+            method: 'POST',
+            body: JSON.stringify(settings)
+        });
+
+        const bgList = document.getElementById('bgList');
+        if (bgList) {
+            bgList.innerHTML = settings.savedBackgrounds.map((bg, i) => `
+                <div class="bg-item">
+                    <img src="${bg}" alt="背景预览" class="bg-preview">
+                    <div class="bg-item-actions">
+                        <button class="bg-item-btn" onclick="applyBackground('${bg}')">使用</button>
+                        <button class="bg-item-btn delete" onclick="deleteBackground(${i})">删除</button>
+                    </div>
                 </div>
-            </div>
-        `).join('');
+            `).join('');
+        }
+    } catch (error) {
+        console.error('Failed to delete background:', error);
     }
 }
 
