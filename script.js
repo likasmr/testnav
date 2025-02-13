@@ -50,8 +50,27 @@ const categories = [
     }
 ];
 
+// 修改所有的 fetch 调用
+const API_URL = '/api/background';
+
+// 添加到文件开头
+async function checkApiStatus() {
+    try {
+        const response = await fetch(API_URL);
+        return response.ok;
+    } catch (error) {
+        return false;
+    }
+}
+
 // 初始化页面
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    const apiAvailable = await checkApiStatus();
+    if (!apiAvailable) {
+        console.error('Background sync service is not available');
+        // 可以回退到 localStorage
+        return;
+    }
     // 渲染分类和链接
     renderCategories(categories);
     
@@ -70,9 +89,17 @@ async function initBackgroundSettings() {
     const bgApply = document.getElementById('bgApply');
     const bgReset = document.getElementById('bgReset');
 
+    const showError = (message) => {
+        console.error(message);
+        // 可以添加一个提示UI
+    };
+
     // 从服务器加载背景设置
     try {
-        const response = await fetch('/api/background');
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         if (data) {
             const settings = JSON.parse(data);
@@ -82,7 +109,7 @@ async function initBackgroundSettings() {
             updateBgList(settings.savedBackgrounds || []);
         }
     } catch (error) {
-        console.error('Failed to load background settings:', error);
+        showError(`Failed to load background settings: ${error.message}`);
     }
 
     // 更新背景列表显示
@@ -111,7 +138,7 @@ async function initBackgroundSettings() {
         const url = bgInput.value.trim();
         if (url) {
             try {
-                const response = await fetch('/api/background');
+                const response = await fetch(API_URL);
                 const data = await response.json();
                 const settings = data ? JSON.parse(data) : { savedBackgrounds: [] };
                 
@@ -120,7 +147,7 @@ async function initBackgroundSettings() {
                 }
                 settings.currentBackground = url;
                 
-                await fetch('/api/background', {
+                await fetch(API_URL, {
                     method: 'POST',
                     body: JSON.stringify(settings)
                 });
@@ -129,7 +156,7 @@ async function initBackgroundSettings() {
                 bgInput.value = '';
                 updateBgList(settings.savedBackgrounds);
             } catch (error) {
-                console.error('Failed to save background:', error);
+                showError('Failed to save background: ' + error.message);
             }
         }
     });
@@ -138,7 +165,7 @@ async function initBackgroundSettings() {
     bgReset.addEventListener('click', async () => {
         try {
             const settings = { savedBackgrounds: [], currentBackground: null };
-            await fetch('/api/background', {
+            await fetch(API_URL, {
                 method: 'POST',
                 body: JSON.stringify(settings)
             });
@@ -147,7 +174,7 @@ async function initBackgroundSettings() {
             updateBgList([]);
             bgSettings.classList.remove('active');
         } catch (error) {
-            console.error('Failed to reset background:', error);
+            showError('Failed to reset background: ' + error.message);
         }
     });
 
@@ -162,27 +189,27 @@ async function initBackgroundSettings() {
 // 应用背景
 async function applyBackground(url) {
     try {
-        const response = await fetch('/api/background');
+        const response = await fetch(API_URL);
         const data = await response.json();
         const settings = data ? JSON.parse(data) : { savedBackgrounds: [] };
         
         settings.currentBackground = url;
         
-        await fetch('/api/background', {
+        await fetch(API_URL, {
             method: 'POST',
             body: JSON.stringify(settings)
         });
 
         document.body.style.setProperty('--bg-image', `url('${url}')`);
     } catch (error) {
-        console.error('Failed to apply background:', error);
+        showError('Failed to apply background: ' + error.message);
     }
 }
 
 // 删除背景
 async function deleteBackground(index) {
     try {
-        const response = await fetch('/api/background');
+        const response = await fetch(API_URL);
         const data = await response.json();
         const settings = data ? JSON.parse(data) : { savedBackgrounds: [] };
         
@@ -194,7 +221,7 @@ async function deleteBackground(index) {
             document.body.style.removeProperty('--bg-image');
         }
         
-        await fetch('/api/background', {
+        await fetch(API_URL, {
             method: 'POST',
             body: JSON.stringify(settings)
         });
@@ -212,7 +239,7 @@ async function deleteBackground(index) {
             `).join('');
         }
     } catch (error) {
-        console.error('Failed to delete background:', error);
+        showError('Failed to delete background: ' + error.message);
     }
 }
 
