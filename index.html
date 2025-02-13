@@ -1,42 +1,43 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>二次元导航</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <title>二次元导航 | Anime Nav</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="img/favicon.ico">
+    <!-- Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
-    <div class="container">
-        <h1 class="title">二次元导航<span class="kawaii">✨</span></h1>
-        
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="搜索导航...">
+<body class="dark-theme">
+    <header>
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider round"></div>
+            </label>
+            <em>主题切换</em>
         </div>
+    </header>
 
-        <div class="nav-grid" id="navGrid">
-            <!-- 导航链接将通过 JavaScript 动态生成 -->
+    <main>
+        <div class="container">
+            <h1>二次元导航<span class="subtitle">Your Anime Gateway</span></h1>
+            
+            <div class="search-box">
+                <input type="text" id="search" placeholder="搜索导航项...">
+            </div>
+
+            <div class="nav-grid">
+                <!-- 导航项将通过 JavaScript 动态添加 -->
+            </div>
         </div>
-    </div>
-    
-    <button class="bg-toggle" id="bgToggle">🖼️</button>
-    <div class="bg-settings" id="bgSettings">
-        <h3>背景设置</h3>
-        <div class="bg-input-group">
-            <input type="text" class="bg-input" id="bgInput" placeholder="输入背景图片URL">
-            <button class="bg-button" id="bgApply">添加背景</button>
-        </div>
-        <div class="bg-list" id="bgList">
-            <!-- 背景列表将通过 JavaScript 动态生成 -->
-        </div>
-        <button class="bg-button" id="bgReset" style="margin-top: 0.5rem">恢复默认背景</button>
-    </div>
+    </main>
 
     <footer>
-        <p>Made with 💖 by <a href="https://github.com/yourusername" target="_blank">Your Name</a></p>
+        <p>© 2024 二次元导航 | <a href="https://github.com/你的用户名/项目名" target="_blank">GitHub</a></p>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html> 
