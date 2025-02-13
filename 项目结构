@@ -1,0 +1,7 @@
+.
+├── index.html          # 主页面
+├── style.css           # 样式表
+├── script.js           # 交互逻辑
+├── data.json           # 导航数据存储
+├── README.md           # 项目文档
+└── CNAME               # 自定义域名配置（可选） 

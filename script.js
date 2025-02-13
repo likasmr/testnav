@@ -1,20 +1,40 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-    
-    // 从localStorage读取主题设置
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        body.className = savedTheme;
+// 密码验证逻辑
+const PASSWORD_HASH = '你的SHA256密码哈希'; // 用实际密码生成
+
+function checkPassword() {
+    const input = CryptoJS.SHA256(document.getElementById('password').value).toString();
+    if(input === PASSWORD_HASH) {
+        localStorage.setItem('authenticated', 'true');
+        initApp();
+    } else {
+        alert('密码错误');
     }
-    
-    themeToggle.addEventListener('click', () => {
-        if (body.classList.contains('dark-theme')) {
-            body.classList.replace('dark-theme', 'light-theme');
-            localStorage.setItem('theme', 'light-theme');
-        } else {
-            body.classList.replace('light-theme', 'dark-theme');
-            localStorage.setItem('theme', 'dark-theme');
-        }
-    });
-}); 
+}
+
+// 主题切换
+function toggleTheme() {
+    document.body.dataset.theme = 
+        document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', document.body.dataset.theme);
+}
+
+// 初始化应用
+function initApp() {
+    // 加载导航数据
+    fetch('data.json')
+        .then(response => response.json())
+        .then(data => renderCategories(data));
+
+    // 应用主题设置
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.dataset.theme = savedTheme;
+
+    // 切换显示内容
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('main-content').classList.remove('hidden');
+}
+
+// 首次加载检查认证状态
+if(localStorage.getItem('authenticated') === 'true') {
+    initApp();
+} 

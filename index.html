@@ -3,29 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>二次元导航 | Anime Nav</title>
+    <title>私人导航 | My Nav</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
-<body class="dark-theme">
-    <div class="theme-switch">
-        <button id="themeToggle">
-            <span class="moon">🌙</span>
-            <span class="sun">☀️</span>
-        </button>
+<body>
+    <!-- 密码保护界面 -->
+    <div id="login-screen" class="login-container">
+        <input type="password" id="password" placeholder="输入访问密码">
+        <button onclick="checkPassword()">解锁</button>
     </div>
-    
-    <header>
-        <h1>二次元导航</h1>
-        <p class="subtitle">你的个人动漫世界</p>
-    </header>
 
-    <main>
-        <!-- 导航内容将在这里添加 -->
-    </main>
+    <!-- 主内容 -->
+    <div id="main-content" class="hidden">
+        <!-- 头部 -->
+        <header>
+            <h1>个人导航</h1>
+            <div class="theme-switch">
+                <button onclick="toggleTheme()">🌓 切换主题</button>
+            </div>
+        </header>
 
-    <footer>
-        <p>Made with ❤️ by Anime Lovers</p>
-    </footer>
+        <!-- 分类容器 -->
+        <div id="category-container" class="grid-container"></div>
+
+        <!-- 搜索框 -->
+        <div class="search-box">
+            <input type="text" id="search" placeholder="快速搜索...">
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
