@@ -4,6 +4,8 @@
     --card-bg: #2d2d2d;
     --hover-color: #3a3a3a;
     --accent-color: #ff69b4;
+    --bg-image: none;
+    --bg-opacity: 0.2;
 }
 
 .light-theme {
@@ -122,7 +124,7 @@ footer a {
     text-decoration: none;
 }
 
-/* 添加背景相关样式 */
+/* 修改背景相关样式 */
 body::before {
     content: '';
     position: fixed;
@@ -131,11 +133,18 @@ body::before {
     width: 100%;
     height: 100%;
     z-index: -1;
+    background-image: var(--bg-image);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.2;
+    opacity: var(--bg-opacity, 0.2);
     transition: opacity 0.3s ease;
+}
+
+/* 确保背景切换按钮和主题切换按钮的颜色正确 */
+.bg-switch,
+.theme-switch {
+    color: var(--text-color);
 }
 
 /* 背景切换按钮 */
@@ -146,7 +155,6 @@ body::before {
     cursor: pointer;
     font-size: 1.5rem;
     z-index: 1000;
-    color: var(--text-color);
 }
 
 /* 模态框样式 */
