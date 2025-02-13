@@ -1,0 +1,263 @@
+:root {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --card-bg: #2d2d2d;
+    --hover-color: #3a3a3a;
+    --accent-color: #ff69b4;
+    --blur-amount: 5px;
+    --dim-amount: 0.3;
+    --font-family: 'ZCOOL XiaoWei', 'Arial', sans-serif;
+}
+
+.light-theme {
+    --bg-color: #f0f0f0;
+    --text-color: #333333;
+    --card-bg: #ffffff;
+    --hover-color: #e6e6e6;
+    --accent-color: #ff69b4;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+header {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: var(--accent-color);
+}
+
+.subtitle {
+    font-size: 1rem;
+    margin-left: 1rem;
+    opacity: 0.7;
+}
+
+.theme-switch {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    z-index: 1000;
+}
+
+.search-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+#search {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 25px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.nav-section {
+    margin: 2rem auto;
+    max-width: 1200px;
+    padding: 0 1rem;
+}
+
+.nav-section h2 {
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+}
+
+.nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: transform 0.2s;
+    animation: fadeIn 0.5s ease;
+}
+
+.nav-item:hover {
+    transform: translateY(-5px);
+    background-color: var(--hover-color);
+}
+
+.nav-item img {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 0.5rem;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+footer a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    filter: blur(var(--blur-amount));
+    transition: all 0.3s ease;
+}
+
+.background-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, var(--dim-amount));
+}
+
+.floating-settings {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: var(--card-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+.floating-settings:hover {
+    transform: rotate(90deg);
+}
+
+.settings-panel {
+    position: fixed;
+    left: -300px;
+    top: 0;
+    width: 300px;
+    height: 100vh;
+    background-color: var(--card-bg);
+    z-index: 1001;
+    padding: 20px;
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+}
+
+.settings-panel.active {
+    left: 0;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close-settings {
+    cursor: pointer;
+}
+
+.setting-item {
+    margin-bottom: 20px;
+}
+
+.setting-item label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.setting-item input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--accent-color);
+    color: var(--text-color);
+    border-radius: 4px;
+}
+
+.setting-item input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent-color);
+}
+
+.setting-item button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.anime-decoration {
+    position: fixed;
+    bottom: -100px;
+    right: -50px;
+    z-index: -1;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.anime-char {
+    width: 300px;
+    height: auto;
+    transform: scaleX(-1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nav-item, .search-container input, .settings-panel {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+} 
