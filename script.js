@@ -1,5 +1,5 @@
 // 密码验证逻辑
-const PASSWORD_HASH = '你的SHA256密码哈希'; // 用实际密码生成
+const PASSWORD_HASH = 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'; // 用实际密码生成
 
 function checkPassword() {
     const input = CryptoJS.SHA256(document.getElementById('password').value).toString();
