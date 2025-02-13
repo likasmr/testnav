@@ -36,69 +36,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 背景设置相关
-    const settingsBtn = document.querySelector('.floating-settings');
-    const settingsPanel = document.querySelector('.settings-panel');
-    const closeSettings = document.querySelector('.close-settings');
-    const bgInput = document.getElementById('bgInput');
-    const setBgBtn = document.getElementById('setBg');
+    // 自定义背景功能
+    const customizeToggle = document.querySelector('.customize-toggle');
+    const customizePanel = document.querySelector('.customize-panel');
+    const bgUrlInput = document.getElementById('bgUrl');
+    const setBgButton = document.getElementById('setBg');
     const blurRange = document.getElementById('blurRange');
-    const dimRange = document.getElementById('dimRange');
     const backgroundOverlay = document.querySelector('.background-overlay');
+    const presets = document.querySelectorAll('.preset');
 
     // 从localStorage获取背景设置
     const savedBg = localStorage.getItem('background');
     const savedBlur = localStorage.getItem('blur');
-    const savedDim = localStorage.getItem('dim');
-
+    
     if (savedBg) {
         backgroundOverlay.style.backgroundImage = `url(${savedBg})`;
     }
+    
     if (savedBlur) {
         document.documentElement.style.setProperty('--blur-amount', `${savedBlur}px`);
         blurRange.value = savedBlur;
     }
-    if (savedDim) {
-        document.documentElement.style.setProperty('--dim-amount', savedDim);
-        dimRange.value = savedDim * 100;
-    }
 
-    // 设置面板开关
-    settingsBtn.addEventListener('click', () => {
-        settingsPanel.classList.add('active');
+    // 切换自定义面板
+    customizeToggle.addEventListener('click', () => {
+        customizePanel.classList.toggle('active');
     });
 
-    closeSettings.addEventListener('click', () => {
-        settingsPanel.classList.remove('active');
-    });
-
-    // 设置背景
-    setBgBtn.addEventListener('click', () => {
-        const url = bgInput.value;
+    // 设置自定义背景
+    setBgButton.addEventListener('click', () => {
+        const url = bgUrlInput.value;
         if (url) {
-            backgroundOverlay.style.backgroundImage = `url(${url})`;
-            localStorage.setItem('background', url);
+            setBackground(url);
         }
     });
 
-    // 模糊度调节
+    // 背景模糊度调整
     blurRange.addEventListener('input', (e) => {
         const blur = e.target.value;
         document.documentElement.style.setProperty('--blur-amount', `${blur}px`);
         localStorage.setItem('blur', blur);
     });
 
-    // 暗度调节
-    dimRange.addEventListener('input', (e) => {
-        const dim = e.target.value / 100;
-        document.documentElement.style.setProperty('--dim-amount', dim);
-        localStorage.setItem('dim', dim);
+    // 预设背景点击事件
+    presets.forEach(preset => {
+        // 设置预设背景的预览图
+        const bgUrl = preset.dataset.bg;
+        preset.style.backgroundImage = `url(${bgUrl})`;
+        
+        preset.addEventListener('click', () => {
+            setBackground(bgUrl);
+        });
     });
 
-    // 点击外部关闭设置面板
-    document.addEventListener('click', (e) => {
-        if (!settingsPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
-            settingsPanel.classList.remove('active');
-        }
-    });
+    function setBackground(url) {
+        backgroundOverlay.style.backgroundImage = `url(${url})`;
+        localStorage.setItem('background', url);
+    }
 }); 
