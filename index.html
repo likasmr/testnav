@@ -1,26 +1,41 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>二次元导航</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>二次元导航</h1>
-        <button id="theme-toggle">切换主题</button>
-    </header>
+    <div class="container">
+        <h1 class="title">二次元导航<span class="kawaii">✨</span></h1>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="搜索导航...">
+        </div>
+
+        <div class="nav-grid" id="navGrid">
+            <!-- 导航链接将通过 JavaScript 动态生成 -->
+        </div>
+    </div>
     
-    <main>
-        <section class="category">
-            <h2>动漫资源</h2>
-            <div class="links">
-                <a href="https://www.bilibili.com" target="_blank">哔哩哔哩</a>
-                <a href="https://www.acfun.cn" target="_blank">AcFun</a>
-            </div>
-        </section>
-    </main>
+    <button class="bg-toggle" id="bgToggle">🖼️</button>
+    <div class="bg-settings" id="bgSettings">
+        <h3>背景设置</h3>
+        <div class="bg-input-group">
+            <input type="text" class="bg-input" id="bgInput" placeholder="输入背景图片URL">
+            <button class="bg-button" id="bgApply">添加背景</button>
+        </div>
+        <div class="bg-list" id="bgList">
+            <!-- 背景列表将通过 JavaScript 动态生成 -->
+        </div>
+        <button class="bg-button" id="bgReset" style="margin-top: 0.5rem">恢复默认背景</button>
+    </div>
+
+    <footer>
+        <p>Made with 💖 by <a href="https://github.com/yourusername" target="_blank">Your Name</a></p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
