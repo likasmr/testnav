@@ -640,10 +640,4 @@ async function fetchSiteInfo() {
     } catch (error) {
         showToast('获取网站信息失败: ' + error.message, 'error');
     }
-}
-
-// 切换搜索框可见性
-function toggleSearch() {
-    const searchBox = document.querySelector('.search-box');
-    searchBox.classList.toggle('collapsed');
 } 
