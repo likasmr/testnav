@@ -190,10 +190,19 @@ async function checkAuth() {
 
 // 登出功能
 function logout() {
+    if (!confirm('确定要退出登录吗？')) {
+        return;
+    }
+
     authToken = null;
     localStorage.removeItem('authToken');
     localStorage.removeItem('credentials');
-    window.location.href = '/login.html';
+    showToast('已退出登录', 'info');
+    
+    // 延迟跳转，让用户看到提示
+    setTimeout(() => {
+        window.location.href = '/login.html';
+    }, 1000);
 }
 
 // 修改setAsDefault函数
