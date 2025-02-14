@@ -197,7 +197,9 @@
         </form>
     </div>
 
+    <script src="toast.js" type="module"></script>
     <script>
+        import toast from './toast.js';
         async function handleLogin(event) {
             event.preventDefault();
             
@@ -255,24 +257,16 @@
                     }
                     
                     // 登录成功动画
-                    loginBtn.textContent = '登录成功！';
-                    loginBtn.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
+                    toast.show('登录成功！', 'success');
                     
                     setTimeout(() => {
                         window.location.href = '/';
                     }, 500);
                 } else {
-                    throw new Error(data.message || '用户名或密码错误');
+                    toast.show(data.message || '用户名或密码错误', 'error');
                 }
             } catch (error) {
-                // 显示错误信息
-                passwordGroup.classList.add('error');
-                passwordGroup.querySelector('.error-message').textContent = 
-                    error.message || '登录失败，请重试';
-                
-                // 重置按钮状态
-                loginBtn.classList.remove('loading');
-                loginBtn.textContent = '登录';
+                toast.show(error.message || '登录失败，请重试', 'error');
             }
         }
 

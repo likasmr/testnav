@@ -460,4 +460,71 @@ body {
 .settings-panel .logout-btn {
     background: linear-gradient(45deg, #bf616a, #d08770) !important;
     margin-top: 10px;
+}
+
+/* Toast 通知样式 */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.toast {
+    background: rgba(26, 27, 38, 0.95);
+    border-radius: 12px;
+    padding: 12px 24px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    min-width: 250px;
+    max-width: 400px;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--card-border);
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toast svg {
+    width: 20px;
+    height: 20px;
+}
+
+.toast-success {
+    border-left: 4px solid #4CAF50;
+}
+
+.toast-error {
+    border-left: 4px solid #ff6b6b;
+}
+
+.toast-info {
+    border-left: 4px solid #2196F3;
+}
+
+.toast-progress {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--main-color), var(--secondary-color));
+    width: 100%;
+    animation: progress 3s linear;
+}
+
+@keyframes progress {
+    from { width: 100%; }
+    to { width: 0%; }
 } 
