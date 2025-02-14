@@ -36,12 +36,7 @@ function generateLinkGrid() {
 
 // 樱花飘落效果
 function createSakura() {
-    console.log('Initializing sakura effect...'); // 调试信息
     const container = document.getElementById('sakura-container');
-    if (!container) {
-        console.error('Sakura container not found!');
-        return;
-    }
     const petalCount = 15; // 同时存在的花瓣数量
     
     function generatePetal() {
@@ -50,17 +45,21 @@ function createSakura() {
         
         // 随机属性
         const left = Math.random() * 100;
-        const duration = 8 + Math.random() * 10; // 8-18秒
+        const duration = 12 + Math.random() * 8; // 12-20秒
         const delay = Math.random() * -20;
-        const size = 10 + Math.random() * 10;
+        const size = 8 + Math.random() * 8; // 更小的花瓣
         const opacity = 0.7 + Math.random() * 0.3;
+        const rotate = Math.random() * 360; // 初始旋转角度
         
         petal.style.cssText = `
             left: ${left}%;
-            animation: fall ${duration}s linear ${delay}s infinite;
+            animation-duration: ${duration}s;
+            animation-delay: ${delay}s;
             width: ${size}px;
             height: ${size}px;
             opacity: ${opacity};
+            transform: rotate(${rotate}deg);
+            filter: drop-shadow(0 0 2px rgba(255,182,193,0.3));
         `;
         
         container.appendChild(petal);
@@ -71,8 +70,8 @@ function createSakura() {
         }
     }
     
-    // 每0.5秒生成新花瓣
-    setInterval(generatePetal, 500);
+    // 每0.8秒生成新花瓣，频率稍微降低
+    setInterval(generatePetal, 800);
 }
 
 // 初始化
