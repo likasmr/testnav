@@ -1,5 +1,10 @@
 const siteConfig = {
     defaultBackground: "https://www.loliapi.com/acg/",
+    backgroundApis: [
+        "https://www.loliapi.com/acg/",
+        "https://api.yimian.xyz/img?type=moe",
+        "https://api.vvhan.com/api/acgimg"
+    ],
     categories: {
         "追番平台": [
             { name: "哔哩哔哩", url: "https://www.bilibili.com", color: "#00a1d6" },

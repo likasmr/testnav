@@ -122,11 +122,48 @@ document.getElementById('bgBlur').addEventListener('change', function() {
     localStorage.setItem('bgBlur', this.value);
 });
 
+// 随机背景功能
+async function randomBackground() {
+    const apis = siteConfig.backgroundApis;
+    const randomApi = apis[Math.floor(Math.random() * apis.length)];
+    
+    try {
+        // 更新输入框
+        document.getElementById('bgImageUrl').value = randomApi;
+        // 应用新背景
+        updateBackground();
+    } catch (error) {
+        console.error('获取随机背景失败:', error);
+    }
+}
+
+// 搜索功能
+function initSearch() {
+    const searchInput = document.querySelector('.search-box input');
+    const searchButton = document.querySelector('.search-box button');
+
+    function performSearch() {
+        const query = searchInput.value.trim();
+        if (query) {
+            // 默认使用百度搜索
+            window.open(`https://www.baidu.com/s?wd=${encodeURIComponent(query)}`, '_blank');
+        }
+    }
+
+    searchButton.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+}
+
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
     generateLinkGrid();
     createSakura();
     applyBackground();
+    initSearch();
 
     // 设置默认值
     const savedBlur = localStorage.getItem('bgBlur') || 5;

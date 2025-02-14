@@ -358,4 +358,15 @@ body {
 
 .setting-item button:hover {
     opacity: 0.9;
+}
+
+.button-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.button-group button {
+    flex: 1;
+    min-width: 0;
 } 
