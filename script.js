@@ -81,7 +81,7 @@ function updateBackground() {
 }
 
 function applyBackground() {
-    const url = localStorage.getItem('bgImage') || config.defaultBgImage;
+    const url = localStorage.getItem('bgImage');
     const blur = localStorage.getItem('bgBlur') || 5;
     
     let bgContainer = document.querySelector('.bg-container');
@@ -90,11 +90,6 @@ function applyBackground() {
         bgContainer = document.createElement('div');
         bgContainer.className = 'bg-container';
         document.body.insertBefore(bgContainer, document.body.firstChild);
-    }
-    
-    // 如果localStorage中没有保存的背景图，自动填充输入框
-    if (!localStorage.getItem('bgImage')) {
-        document.getElementById('bgImageUrl').value = config.defaultBgImage;
     }
     
     if (url) {
@@ -121,15 +116,12 @@ document.getElementById('bgBlur').addEventListener('change', function() {
 // 添加获取远程配置的功能
 async function fetchRemoteConfig() {
     try {
-        // 替换为你的 Gist ID
-        const gistId = 'your_gist_id';
-        const response = await fetch(`https://api.github.com/gists/${gistId}`);
+        const response = await fetch('/api/get-config');
         const data = await response.json();
-        const config = JSON.parse(data.files['config.json'].content);
         
         // 更新背景
-        if (config.bgImage) {
-            document.getElementById('bgImageUrl').value = config.bgImage;
+        if (data.defaultBgImage) {
+            document.getElementById('bgImageUrl').value = data.defaultBgImage;
             updateBackground();
         }
     } catch (error) {
@@ -252,19 +244,34 @@ async function setAsDefault() {
 }
 
 // 初始化
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     checkAuth();
     generateLinkGrid();
     createSakura();
+    
+    try {
+        // 首先尝试获取远程配置
+        const response = await fetch('/api/get-config');
+        const data = await response.json();
+        
+        if (data.defaultBgImage) {
+            // 如果本地没有保存的背景，使用远程默认背景
+            if (!localStorage.getItem('bgImage')) {
+                localStorage.setItem('bgImage', data.defaultBgImage);
+            }
+            // 更新输入框的值
+            document.getElementById('bgImageUrl').value = data.defaultBgImage;
+        }
+    } catch (error) {
+        console.error('获取远程配置失败:', error);
+    }
     
     // 如果 localStorage 中已有背景配置，则直接使用
     if (localStorage.getItem('bgImage')) {
         applyBackground();
     } else if (!new URLSearchParams(window.location.search).has('bg')) {
-        // 否则如果 URL 中没有配置，则尝试获取远程配置
-        fetchRemoteConfig().catch(() => {
-            applyBackground();
-        });
+        // 如果没有本地配置也没有URL参数，应用默认背景
+        applyBackground();
     } else {
         // 否则，加载 URL 中的配置（例如通过分享链接加载）
         loadFromUrl();
