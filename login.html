@@ -12,28 +12,165 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            background: var(--bg-gradient);
         }
         
         .login-container {
             background: rgba(26, 27, 38, 0.95);
-            padding: 2rem;
-            border-radius: 15px;
+            padding: 2.5rem;
+            border-radius: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(10px);
             border: 1px solid var(--card-border);
-            width: 300px;
+            width: 320px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b9d, #b48ead);
         }
         
         .login-title {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
         
         .login-title h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             background-image: linear-gradient(45deg, #ff6b9d, #b48ead);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .login-title p {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin: 0;
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            background: rgba(41, 42, 58, 0.9);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff6b9d;
+            box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.2);
+        }
+        
+        .input-group .error-message {
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .input-group.error input {
+            border-color: #ff6b6b;
+            animation: shake 0.5s;
+        }
+        
+        .input-group.error .error-message {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .remember-login {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 1.5rem 0;
+        }
+        
+        .remember-login input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+        }
+        
+        .remember-login label {
+            color: var(--text-color);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #ff6b9d, #b48ead);
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.3);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .login-btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        
+        .login-btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -43,22 +180,52 @@
             <h1>AnimeHome</h1>
             <p>登录以继续访问</p>
         </div>
-        <div class="login-form">
-            <input type="text" id="username" placeholder="用户名">
-            <input type="password" id="password" placeholder="密码">
+        <form class="login-form" onsubmit="handleLogin(event)">
+            <div class="input-group" id="usernameGroup">
+                <input type="text" id="username" placeholder="用户名" autocomplete="username">
+                <div class="error-message">请输入用户名</div>
+            </div>
+            <div class="input-group" id="passwordGroup">
+                <input type="password" id="password" placeholder="密码" autocomplete="current-password">
+                <div class="error-message">请输入密码</div>
+            </div>
             <div class="remember-login">
                 <input type="checkbox" id="rememberLogin" checked>
                 <label for="rememberLogin">记住登录（7天）</label>
             </div>
-            <button onclick="login()">登录</button>
-        </div>
+            <button type="submit" class="login-btn" id="loginBtn">登录</button>
+        </form>
     </div>
 
     <script>
-        async function login() {
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const usernameGroup = document.getElementById('usernameGroup');
+            const passwordGroup = document.getElementById('passwordGroup');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // 重置错误状态
+            usernameGroup.classList.remove('error');
+            passwordGroup.classList.remove('error');
+            
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const remember = document.getElementById('rememberLogin').checked;
+            
+            // 验证输入
+            if (!username) {
+                usernameGroup.classList.add('error');
+                return;
+            }
+            if (!password) {
+                passwordGroup.classList.add('error');
+                return;
+            }
+            
+            // 添加加载状态
+            loginBtn.classList.add('loading');
+            loginBtn.textContent = '登录中...';
             
             try {
                 const response = await fetch('/api/auth', {
@@ -78,7 +245,6 @@
                         expiresAt: data.expiresAt
                     }));
                     
-                    // 如果选择记住登录，保存加密的凭据
                     if (remember) {
                         const credentials = btoa(JSON.stringify({ 
                             username, 
@@ -88,20 +254,39 @@
                         localStorage.setItem('credentials', credentials);
                     }
                     
-                    // 登录成功后跳转到主页
-                    window.location.href = '/';
+                    // 登录成功动画
+                    loginBtn.textContent = '登录成功！';
+                    loginBtn.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
+                    
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 500);
                 } else {
-                    alert('登录失败：' + data.message);
+                    throw new Error(data.message || '用户名或密码错误');
                 }
             } catch (error) {
-                alert('登录失败，请重试');
+                // 显示错误信息
+                passwordGroup.classList.add('error');
+                passwordGroup.querySelector('.error-message').textContent = 
+                    error.message || '登录失败，请重试';
+                
+                // 重置按钮状态
+                loginBtn.classList.remove('loading');
+                loginBtn.textContent = '登录';
             }
         }
 
+        // 输入时清除错误状态
+        document.querySelectorAll('.input-group input').forEach(input => {
+            input.addEventListener('input', () => {
+                input.parentElement.classList.remove('error');
+            });
+        });
+
         // 回车键登录
         document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                login();
+            if (e.key === 'Enter' && !e.shiftKey) {
+                document.querySelector('.login-btn').click();
             }
         });
     </script>
