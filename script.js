@@ -1,20 +1,8 @@
-// 链接数据
-const linksData = {
-    "追番平台": [
-        { name: "哔哩哔哩", url: "https://www.bilibili.com", color: "#00a1d6" },
-        { name: "AcFun", url: "https://www.acfun.cn", color: "#fd4c5b" }
-    ],
-    "资源社区": [
-        { name: "萌娘百科", url: "https://zh.moegirl.org.cn", color: "#f28ead" },
-        { name: "Bangumi", url: "https://bgm.tv", color: "#333333" }
-    ]
-};
-
 // 动态生成链接网格
 function generateLinkGrid() {
     const container = document.getElementById('linksContainer');
     
-    for (const [category, items] of Object.entries(linksData)) {
+    for (const [category, items] of Object.entries(config.links)) {
         const categoryHTML = `
             <div class="category-card">
                 <h2>${category}</h2>
@@ -93,7 +81,7 @@ function updateBackground() {
 }
 
 function applyBackground() {
-    const url = localStorage.getItem('bgImage');
+    const url = localStorage.getItem('bgImage') || config.defaultBgImage;
     const blur = localStorage.getItem('bgBlur') || 5;
     
     let bgContainer = document.querySelector('.bg-container');
@@ -102,6 +90,11 @@ function applyBackground() {
         bgContainer = document.createElement('div');
         bgContainer.className = 'bg-container';
         document.body.insertBefore(bgContainer, document.body.firstChild);
+    }
+    
+    // 如果localStorage中没有保存的背景图，自动填充输入框
+    if (!localStorage.getItem('bgImage')) {
+        document.getElementById('bgImageUrl').value = config.defaultBgImage;
     }
     
     if (url) {
@@ -125,43 +118,10 @@ document.getElementById('bgBlur').addEventListener('change', function() {
     localStorage.setItem('bgBlur', this.value);
 });
 
-// 生成分享链接
-function generateShareLink() {
-    const bgImage = encodeURIComponent(document.getElementById('bgImageUrl').value);
-    const bgBlur = document.getElementById('bgBlur').value;
-    const currentUrl = new URL(window.location.href);
-    
-    currentUrl.searchParams.set('bgImage', bgImage);
-    currentUrl.searchParams.set('bgBlur', bgBlur);
-    
-    // 复制到剪贴板
-    navigator.clipboard.writeText(currentUrl.href).then(() => {
-        alert('已复制分享链接到剪贴板！');
-    });
-}
-
-// 解析URL参数
-function parseUrlParams() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const bgImage = urlParams.get('bgImage');
-    const bgBlur = urlParams.get('bgBlur');
-
-    if (bgImage) {
-        document.getElementById('bgImageUrl').value = decodeURIComponent(bgImage);
-        localStorage.setItem('bgImage', decodeURIComponent(bgImage));
-    }
-    
-    if (bgBlur) {
-        document.getElementById('bgBlur').value = bgBlur;
-        localStorage.setItem('bgBlur', bgBlur);
-    }
-}
-
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
     generateLinkGrid();
     createSakura();
-    parseUrlParams(); // 新增：优先读取URL参数
     applyBackground();
 
     // 设置默认值

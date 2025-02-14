@@ -22,6 +22,9 @@
 4. 选择分支后自动部署
 
 ## 自定义配置
-1. 修改`linksData`（script.js）添加你的常用链接
+1. 修改`config.js`中的配置项
+   - defaultBgImage: 默认背景图片地址
+   - site: 网站标题等基本信息
+   - links: 导航链接分类与内容
 2. 在`style.css`中调整颜色变量
 3. 添加`mascot`目录放置看板娘素材 
