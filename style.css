@@ -298,7 +298,7 @@ body {
 
 .settings-btn:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 16px rgba(255, 107, 157, 0.2);
 }
 
 .settings-btn span {
@@ -315,8 +315,8 @@ body {
     position: fixed;
     top: 80px;
     right: 20px;
-    visibility: hidden;
     opacity: 0;
+    visibility: hidden;
     background: rgba(26, 27, 38, 0.98);
     padding: 20px;
     border-radius: 15px;
@@ -325,58 +325,65 @@ body {
     border: 1px solid var(--card-border);
     z-index: 999;
     min-width: 300px;
-    transform: translateY(-20px);
+    transform: translateY(-10px);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
 }
 
-.settings-panel.show {
-    visibility: visible;
+.settings-btn:hover + .settings-panel,
+.settings-panel:hover {
     opacity: 1;
+    visibility: visible;
     transform: translateY(0);
-    pointer-events: auto;
 }
 
-/* 创建一个连接区域，确保鼠标移动到面板时不会消失 */
-.settings-btn::after {
+/* 设置面板显示时的遮罩 */
+.settings-panel::before {
     content: '';
     position: absolute;
-    top: 100%;
-    right: 0;
-    width: 100px;
+    top: -20px;
+    right: 15px;
+    width: 20px;
     height: 20px;
+    background: rgba(26, 27, 38, 0.98);
+    transform: rotate(45deg);
+    border-left: 1px solid var(--card-border);
+    border-top: 1px solid var(--card-border);
+    z-index: -1;
 }
 
 .settings-panel h3 {
     color: var(--heading-color);
     margin-top: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     font-size: 1.5rem;
     opacity: 0;
     transform: translateY(-10px);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
 }
 
-.settings-panel.show h3 {
+.settings-btn:hover + .settings-panel h3,
+.settings-panel:hover h3 {
     opacity: 1;
     transform: translateY(0);
 }
 
 .setting-item {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     opacity: 0;
     transform: translateY(-10px);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.settings-panel.show .setting-item {
+.settings-btn:hover + .settings-panel .setting-item,
+.settings-panel:hover .setting-item {
     opacity: 1;
     transform: translateY(0);
 }
 
-.settings-panel.show .setting-item:nth-child(1) { transition-delay: 0.2s; }
-.settings-panel.show .setting-item:nth-child(2) { transition-delay: 0.3s; }
-.settings-panel.show .setting-item:nth-child(3) { transition-delay: 0.4s; }
+/* 为每个设置项添加延迟动画 */
+.setting-item:nth-child(1) { transition-delay: 0.15s; }
+.setting-item:nth-child(2) { transition-delay: 0.2s; }
+.setting-item:nth-child(3) { transition-delay: 0.25s; }
 
 .setting-item label {
     display: block;

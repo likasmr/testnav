@@ -245,25 +245,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     const blurInput = document.getElementById('bgBlur');
     blurInput.value = savedBlur;
     document.getElementById('blurValue').textContent = savedBlur + 'px';
-
-    // 设置面板交互
-    const settingsBtn = document.querySelector('.settings-btn');
-    const settingsPanel = document.getElementById('settingsPanel');
-    let timeoutId;
-
-    function showPanel() {
-        clearTimeout(timeoutId);
-        settingsPanel.classList.add('show');
-    }
-
-    function hidePanel() {
-        timeoutId = setTimeout(() => {
-            settingsPanel.classList.remove('show');
-        }, 300); // 添加一点延迟，使交互更流畅
-    }
-
-    settingsBtn.addEventListener('mouseenter', showPanel);
-    settingsBtn.addEventListener('mouseleave', hidePanel);
-    settingsPanel.addEventListener('mouseenter', showPanel);
-    settingsPanel.addEventListener('mouseleave', hidePanel);
 }); 
