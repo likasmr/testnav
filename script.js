@@ -7,11 +7,16 @@ async function generateLinkGrid() {
         // 从API获取链接数据
         const response = await fetch('/api/manage-links');
         const data = await response.json();
-        // 合并默认链接和KV中的链接
-        links = {
-            ...config.links,  // 首先使用默认链接
-            ...data.links     // 然后用KV中的链接覆盖或添加
-        };
+        links = data.links;
+        
+        // 如果是首次使用（KV中没有链接），则导入默认链接
+        if (Object.keys(links).length === 0) {
+            await importDefaultLinks();
+            // 重新获取链接
+            const newResponse = await fetch('/api/manage-links');
+            const newData = await newResponse.json();
+            links = newData.links;
+        }
     } catch (error) {
         console.error('获取链接失败，使用默认配置');
         links = config.links;
@@ -235,22 +240,16 @@ async function loadLinks() {
         const data = await response.json();
         
         if (data.links) {
-            // 合并默认链接和KV中的链接
-            const allLinks = {
-                ...config.links,
-                ...data.links
-            };
-            
             // 更新分类下拉框
             const categorySelect = document.getElementById('linkCategory');
             categorySelect.innerHTML = '<option value="">选择分类...</option><option value="new">新建分类</option>';
             
-            Object.keys(allLinks).forEach(category => {
+            Object.keys(data.links).forEach(category => {
                 categorySelect.innerHTML += `<option value="${category}">${category}</option>`;
             });
             
             // 更新链接列表
-            updateLinksList(allLinks);
+            updateLinksList(data.links);
         }
     } catch (error) {
         showToast('加载链接失败', 'error');
@@ -388,6 +387,32 @@ async function deleteLink(category, link) {
     }
 }
 
+// 导入默认链接到KV
+async function importDefaultLinks() {
+    try {
+        // 遍历config.js中的每个分类和链接
+        for (const [category, items] of Object.entries(config.links)) {
+            for (const link of items) {
+                await fetch('/api/manage-links', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        action: 'add',
+                        category,
+                        link
+                    })
+                });
+            }
+        }
+        showToast('默认链接导入成功', 'success');
+    } catch (error) {
+        console.error('导入默认链接失败:', error);
+    }
+}
+
 // 初始化
 document.addEventListener('DOMContentLoaded', async () => {
     checkAuth();
@@ -473,4 +498,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('newCategory').style.display = 
             this.value === 'new' ? 'block' : 'none';
     });
-}); 
+});
+
+async function resetToDefaultLinks() {
+    if (!confirm('确定要恢复默认链接吗？这将删除所有自定义链接！')) return;
+    
+    try {
+        // 清空现有链接
+        await fetch('/api/manage-links', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+                action: 'reset'
+            })
+        });
+        
+        // 导入默认链接
+        await importDefaultLinks();
+        
+        // 刷新显示
+        await generateLinkGrid();
+        loadLinks();
+        
+        showToast('已恢复默认链接', 'success');
+    } catch (error) {
+        showToast('恢复默认链接失败', 'error');
+    }
+} 

@@ -76,6 +76,11 @@ export async function onRequestPost(context) {
                     }
                 }
                 break;
+            case 'reset':
+                // 清空所有链接
+                await env.SETTINGS.delete('siteLinks');
+                links = {};
+                break;
         }
         
         // 保存更新后的链接
