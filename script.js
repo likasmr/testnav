@@ -1,5 +1,14 @@
 // 链接数据
-const linksData = siteConfig.categories;
+const linksData = {
+    "追番平台": [
+        { name: "哔哩哔哩", url: "https://www.bilibili.com", color: "#00a1d6" },
+        { name: "AcFun", url: "https://www.acfun.cn", color: "#fd4c5b" }
+    ],
+    "资源社区": [
+        { name: "萌娘百科", url: "https://zh.moegirl.org.cn", color: "#f28ead" },
+        { name: "Bangumi", url: "https://bgm.tv", color: "#333333" }
+    ]
+};
 
 // 动态生成链接网格
 function generateLinkGrid() {
@@ -84,7 +93,7 @@ function updateBackground() {
 }
 
 function applyBackground() {
-    const url = localStorage.getItem('bgImage') || siteConfig.defaultBackground;
+    const url = localStorage.getItem('bgImage');
     const blur = localStorage.getItem('bgBlur') || 5;
     
     let bgContainer = document.querySelector('.bg-container');
@@ -93,12 +102,6 @@ function applyBackground() {
         bgContainer = document.createElement('div');
         bgContainer.className = 'bg-container';
         document.body.insertBefore(bgContainer, document.body.firstChild);
-    }
-    
-    // 如果没有设置过背景图，使用默认背景图
-    if (!localStorage.getItem('bgImage')) {
-        localStorage.setItem('bgImage', siteConfig.defaultBackground);
-        document.getElementById('bgImageUrl').value = siteConfig.defaultBackground;
     }
     
     if (url) {
@@ -122,56 +125,48 @@ document.getElementById('bgBlur').addEventListener('change', function() {
     localStorage.setItem('bgBlur', this.value);
 });
 
-// 随机背景功能
-async function randomBackground() {
-    const apis = siteConfig.backgroundApis;
-    const randomApi = apis[Math.floor(Math.random() * apis.length)];
+// 生成分享链接
+function generateShareLink() {
+    const bgImage = encodeURIComponent(document.getElementById('bgImageUrl').value);
+    const bgBlur = document.getElementById('bgBlur').value;
+    const currentUrl = new URL(window.location.href);
     
-    try {
-        // 更新输入框
-        document.getElementById('bgImageUrl').value = randomApi;
-        // 应用新背景
-        updateBackground();
-    } catch (error) {
-        console.error('获取随机背景失败:', error);
-    }
+    currentUrl.searchParams.set('bgImage', bgImage);
+    currentUrl.searchParams.set('bgBlur', bgBlur);
+    
+    // 复制到剪贴板
+    navigator.clipboard.writeText(currentUrl.href).then(() => {
+        alert('已复制分享链接到剪贴板！');
+    });
 }
 
-// 搜索功能
-function initSearch() {
-    const searchInput = document.querySelector('.search-box input');
-    const searchButton = document.querySelector('.search-box button');
+// 解析URL参数
+function parseUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const bgImage = urlParams.get('bgImage');
+    const bgBlur = urlParams.get('bgBlur');
 
-    function performSearch() {
-        const query = searchInput.value.trim();
-        if (query) {
-            // 默认使用百度搜索
-            window.open(`https://www.baidu.com/s?wd=${encodeURIComponent(query)}`, '_blank');
-        }
+    if (bgImage) {
+        document.getElementById('bgImageUrl').value = decodeURIComponent(bgImage);
+        localStorage.setItem('bgImage', decodeURIComponent(bgImage));
     }
-
-    searchButton.addEventListener('click', performSearch);
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            performSearch();
-        }
-    });
+    
+    if (bgBlur) {
+        document.getElementById('bgBlur').value = bgBlur;
+        localStorage.setItem('bgBlur', bgBlur);
+    }
 }
 
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
     generateLinkGrid();
     createSakura();
+    parseUrlParams(); // 新增：优先读取URL参数
     applyBackground();
-    initSearch();
 
     // 设置默认值
     const savedBlur = localStorage.getItem('bgBlur') || 5;
     const blurInput = document.getElementById('bgBlur');
     blurInput.value = savedBlur;
     document.getElementById('blurValue').textContent = savedBlur + 'px';
-    
-    // 设置背景图片输入框的默认值
-    const savedBgImage = localStorage.getItem('bgImage') || siteConfig.defaultBackground;
-    document.getElementById('bgImageUrl').value = savedBgImage;
 }); 
