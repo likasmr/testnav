@@ -1,0 +1,3 @@
+npm create vite@latest anime-nav -- --template vue
+cd anime-nav
+npm install 

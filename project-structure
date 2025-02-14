@@ -1,0 +1,19 @@
+anime-nav/
+├── src/
+│   ├── assets/
+│   │   └── styles/
+│   │       └── main.css
+│   │
+│   ├── components/
+│   │   ├── NavHeader.vue
+│   │   ├── NavGrid.vue
+│   │   └── NavCard.vue
+│   │
+│   ├── config/
+│   │   └── config.js
+│   │
+│   ├── App.vue
+│   └── main.js
+│
+├── index.html
+└── package.json 

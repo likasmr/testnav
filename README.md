@@ -1,34 +1,32 @@
-# 萌系导航站 🎀
+# Anime Style Navigation Site (二次元导航站)
 
-[![Deploy to Cloudflare](https://img.shields.io/badge/Deploy%20to-CF%20Pages-blue?logo=cloudflare)](https://dash.cloudflare.com/?to=/:account/pages/new)
+这是一个简约而精致的二次元风格个人导航网站，可以直接部署在 Cloudflare Pages 上。
 
-二次元风格的个人导航网站，具备以下特性：
+## ✨ 特性
 
-## ✨ 功能特色
-- **萌系视觉设计**
-  - 渐变粉紫背景
-  - 悬浮卡片动画
-  - 动态星空效果
-  - 侧边看板娘（可替换）
-- **实用功能**
-  - 快捷搜索（支持Google）
-  - 链接分类管理
-  - 响应式布局
-  - 夜间模式切换
-- **便捷部署**
-  - 纯静态页面
-  - 一键Cloudflare部署
-  - 配置式链接管理
+- 🎨 二次元风格界面设计
+- 📱 响应式布局，支持移动端访问
+- ⚡ 基于 Cloudflare Pages，访问速度快
+- 🔍 支持网站搜索功能
+- 🎯 支持自定义导航分类
+- 🌈 支持自定义主题色
+- 💾 数据存储在前端，方便修改
 
-## 🚀 部署指南
-1. Fork本仓库
-2. 登录Cloudflare控制台
-3. 创建Pages项目并连接GitHub仓库
-4. 选择"直接部署"方式
-5. 访问生成的`.pages.dev`域名即可
+## 🚀 部署方式
 
-## 🎨 自定义配置
-修改以下文件个性化你的导航站：
-- `linksConfig.js` 管理导航链接
-- `style.css` 调整颜色和样式
-- 替换`public/character.svg`更改看板娘 
+1. Fork 本仓库
+2. 在 Cloudflare Pages 中连接你的 GitHub 仓库
+3. 部署完成后即可访问
+
+## 🛠️ 自定义配置
+
+编辑 `src/config.js` 文件来自定义你的导航站：
+
+- 修改网站标题和描述
+- 添加/修改导航分类
+- 添加/修改导航链接
+- 自定义主题色
+
+## 📝 开源协议
+
+MIT License 
