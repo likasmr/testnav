@@ -7,21 +7,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- 顶部导航栏 -->
-    <nav class="top-nav">
-        <div class="nav-content">
-            <h1>AnimeHome</h1>
-            <div class="nav-actions">
-                <div class="search-box">
-                    <input type="text" placeholder="搜索或跳转...">
-                    <button>GO!</button>
-                </div>
-                <div class="settings-btn">
-                    <span>⚙️</span>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <!-- 设置按钮 -->
+    <div class="settings-btn">
+        <span>⚙️</span>
+    </div>
     
     <!-- Toast通知 -->
     <div id="toastContainer"></div>
@@ -92,6 +81,17 @@
     </div>
     
     <div class="container">
+        <header class="banner">
+            <h1>AnimeHome</h1>
+            <div class="collapsible-section">
+                <button class="toggle-btn" onclick="toggleSearch()">🔍</button>
+                <div class="search-box">
+                    <input type="text" placeholder="搜索或跳转...">
+                    <button>GO!</button>
+                </div>
+            </div>
+        </header>
+        
         <div class="category-grid" id="linksContainer"></div>
         
         <footer class="waifu-footer">
