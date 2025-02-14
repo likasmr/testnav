@@ -33,6 +33,10 @@ body {
     color: #ff3377;
     text-shadow: 2px 2px 4px rgba(255,51,119,0.2);
     margin-bottom: 1rem;
+    background: linear-gradient(45deg, #ff6b9d, #ff3377);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .category-grid {
@@ -165,7 +169,10 @@ body {
 }
 
 @keyframes fall {
+    from {
+        transform: translateY(-10vh) rotate(0deg);
+    }
     to {
-        transform: translateY(100vh) rotate(360deg);
+        transform: translateY(110vh) rotate(360deg);
     }
 } 
