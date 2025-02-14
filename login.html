@@ -197,9 +197,38 @@
         </form>
     </div>
 
-    <script src="toast.js" type="module"></script>
+    <!-- Toast通知 -->
+    <div id="toastContainer"></div>
+
+    <script src="toast.js"></script>
     <script>
-        import toast from './toast.js';
+        // 引入Toast功能
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toastContainer');
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: '✅',
+                error: '❌',
+                info: 'ℹ️'
+            };
+            
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type]}</span>
+                <span>${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'toastOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
         async function handleLogin(event) {
             event.preventDefault();
             
@@ -218,10 +247,12 @@
             // 验证输入
             if (!username) {
                 usernameGroup.classList.add('error');
+                showToast('请输入用户名', 'error');
                 return;
             }
             if (!password) {
                 passwordGroup.classList.add('error');
+                showToast('请输入密码', 'error');
                 return;
             }
             
@@ -257,16 +288,27 @@
                     }
                     
                     // 登录成功动画
-                    toast.show('登录成功！', 'success');
+                    loginBtn.textContent = '登录成功！';
+                    loginBtn.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
                     
                     setTimeout(() => {
                         window.location.href = '/';
                     }, 500);
                 } else {
-                    toast.show(data.message || '用户名或密码错误', 'error');
+                    const message = data.message || '用户名或密码错误';
+                    showToast(message, 'error');
+                    throw new Error(message);
                 }
             } catch (error) {
-                toast.show(error.message || '登录失败，请重试', 'error');
+                // 显示错误信息
+                passwordGroup.classList.add('error');
+                passwordGroup.querySelector('.error-message').textContent = 
+                    error.message || '登录失败，请重试';
+                showToast(error.message || '登录失败，请重试', 'error');
+                
+                // 重置按钮状态
+                loginBtn.classList.remove('loading');
+                loginBtn.textContent = '登录';
             }
         }
 

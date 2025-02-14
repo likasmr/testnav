@@ -1,5 +1,3 @@
-import toast from './toast.js';
-
 // 动态生成链接网格
 function generateLinkGrid() {
     const container = document.getElementById('linksContainer');
@@ -219,13 +217,13 @@ function logout() {
 // 修改setAsDefault函数
 async function setAsDefault() {
     if (!authToken) {
-        toast.show('请先登录！', 'error');
+        showToast('需要登录后才能设置默认背景', 'error');
         return;
     }
 
     const url = document.getElementById('bgImageUrl').value;
     if (!url) {
-        toast.show('请先输入图片URL！', 'error');
+        showToast('请输入有效的图片链接', 'error');
         return;
     }
 
@@ -242,13 +240,13 @@ async function setAsDefault() {
         });
 
         if (response.ok) {
-            toast.show('已设置为默认背景！', 'success');
+            showToast('默认背景已更新', 'success');
             config.defaultBgImage = url;
         } else {
             throw new Error('设置失败');
         }
     } catch (error) {
-        toast.show('设置失败，请确保已登录', 'error');
+        showToast('设置失败，请检查网络或登录状态', 'error');
         console.error('Error:', error);
     }
 }

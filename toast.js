@@ -1,48 +1,34 @@
-class Toast {
-    constructor() {
-        this.container = document.createElement('div');
-        this.container.className = 'toast-container';
-        document.body.appendChild(this.container);
-    }
+function showToast(message, type = 'info', duration = 3000) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
 
-    show(message, type = 'info') {
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        
-        const icon = this.getIcon(type);
-        toast.innerHTML = `
-            <div class="toast-content">
-                ${icon}
-                <span>${message}</span>
-            </div>
-            <div class="toast-progress"></div>
-        `;
-        
-        this.container.appendChild(toast);
-        
-        // 触发进入动画
-        setTimeout(() => toast.classList.add('show'), 10);
-        
-        // 自动关闭
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    }
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <div class="toast-content">
+            <div class="toast-icon">${getIcon(type)}</div>
+            <div class="toast-message">${message}</div>
+            <button class="toast-close" onclick="this.parentElement.parentElement.remove()">
+                <svg viewBox="0 0 24 24" width="18" height="18">
+                    <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </button>
+        </div>
+    `;
+
+    container.appendChild(toast);
     
-    getIcon(type) {
-        switch(type) {
-            case 'success':
-                return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"/></svg>';
-            case 'error':
-                return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M13 14H11V9H13M13 18H11V16H13M1 21H23L12 2L1 21Z"/></svg>';
-            case 'info':
-                return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg>';
-            default:
-                return '';
-        }
-    }
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
 }
 
-const toast = new Toast();
-export default toast; 
+function getIcon(type) {
+    const icons = {
+        success: '<svg viewBox="0 0 24 24" width="24" height="24"><path fill="#4CAF50" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>',
+        error: '<svg viewBox="0 0 24 24" width="24" height="24"><path fill="#ff6b6b" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>',
+        info: '<svg viewBox="0 0 24 24" width="24" height="24"><path fill="#4dabf7" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>'
+    };
+    return icons[type] || icons.info;
+} 
