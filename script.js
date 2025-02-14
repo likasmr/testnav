@@ -188,21 +188,34 @@ async function checkAuth() {
     window.location.href = '/login.html';
 }
 
-// 登出功能
-function logout() {
-    if (!confirm('确定要退出登录吗？')) {
-        return;
-    }
+// 显示确认对话框
+function showConfirmDialog() {
+    const dialog = document.getElementById('confirmDialog');
+    dialog.classList.add('show');
+}
 
+// 隐藏确认对话框
+function hideConfirmDialog() {
+    const dialog = document.getElementById('confirmDialog');
+    dialog.classList.remove('show');
+}
+
+// 确认退出
+function confirmLogout() {
+    hideConfirmDialog();
     authToken = null;
     localStorage.removeItem('authToken');
     localStorage.removeItem('credentials');
     showToast('已退出登录', 'info');
     
-    // 延迟跳转，让用户看到提示
     setTimeout(() => {
         window.location.href = '/login.html';
     }, 1000);
+}
+
+// 登出功能
+function logout() {
+    showConfirmDialog();
 }
 
 // 修改setAsDefault函数
