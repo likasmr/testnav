@@ -437,4 +437,27 @@ body {
 
 .login-form button:hover {
     opacity: 0.9;
+}
+
+.remember-login {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1rem;
+}
+
+.remember-login input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.remember-login label {
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+/* 添加登出按钮 */
+.settings-panel .logout-btn {
+    background: linear-gradient(45deg, #bf616a, #d08770) !important;
+    margin-top: 10px;
 } 

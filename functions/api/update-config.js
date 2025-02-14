@@ -36,11 +36,10 @@ export async function onRequestPost(context) {
 }
 
 function isValidToken(token, env) {
-    // 简单的token验证
     try {
-        const decoded = atob(token.replace('Bearer ', ''));
-        const [username] = decoded.split(':');
-        return username === env.AUTH_USERNAME;
+        const decoded = JSON.parse(atob(token.replace('Bearer ', '')));
+        return decoded.username === env.AUTH_USERNAME && 
+               Date.now() < decoded.expiresAt;
     } catch {
         return false;
     }

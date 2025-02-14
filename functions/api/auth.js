@@ -7,12 +7,17 @@ export async function onRequestPost(context) {
     const VALID_PASSWORD = env.AUTH_PASSWORD;
     
     if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-        // 生成一个简单的token（实际应用中应该使用更安全的方式）
-        const token = btoa(`${username}:${Date.now()}`);
+        // 生成带过期时间的token（7天后过期）
+        const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7天后的时间戳
+        const token = btoa(JSON.stringify({
+            username,
+            expiresAt
+        }));
         
         return new Response(JSON.stringify({ 
             success: true, 
-            token 
+            token,
+            expiresAt
         }), {
             headers: {
                 'Content-Type': 'application/json'
