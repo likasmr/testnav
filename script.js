@@ -191,13 +191,22 @@ async function checkAuth() {
 // 显示确认对话框
 function showConfirmDialog() {
     const dialog = document.getElementById('confirmDialog');
+    dialog.style.display = 'flex';
+    // 强制重排以触发动画
+    dialog.offsetHeight;
     dialog.classList.add('show');
 }
 
 // 隐藏确认对话框
 function hideConfirmDialog() {
     const dialog = document.getElementById('confirmDialog');
+    dialog.classList.add('hide');
     dialog.classList.remove('show');
+    // 等待动画完成后隐藏
+    setTimeout(() => {
+        dialog.classList.remove('hide');
+        dialog.style.display = 'none';
+    }, 200);
 }
 
 // 确认退出
