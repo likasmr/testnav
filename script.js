@@ -562,6 +562,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('newCategory').style.display = 
             this.value === 'new' ? 'block' : 'none';
     });
+
+    // 导航菜单切换
+    const navItems = document.querySelectorAll('.nav-item');
+    const linksContainer = document.getElementById('linksContainer');
+    const backgroundPanel = document.getElementById('backgroundPanel');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            // 更新导航项状态
+            document.querySelector('.nav-item.active').classList.remove('active');
+            item.classList.add('active');
+
+            // 更新面包屑
+            document.querySelector('.current-section').textContent = 
+                item.textContent.trim();
+
+            // 切换内容显示
+            if (item.dataset.tab === 'background') {
+                linksContainer.style.display = 'none';
+                backgroundPanel.style.display = 'block';
+            } else {
+                linksContainer.style.display = 'grid';
+                backgroundPanel.style.display = 'none';
+            }
+        });
+    });
 });
 
 async function resetToDefaultLinks() {
