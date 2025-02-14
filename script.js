@@ -1,14 +1,5 @@
 // 链接数据
-const linksData = {
-    "追番平台": [
-        { name: "哔哩哔哩", url: "https://www.bilibili.com", color: "#00a1d6" },
-        { name: "AcFun", url: "https://www.acfun.cn", color: "#fd4c5b" }
-    ],
-    "资源社区": [
-        { name: "萌娘百科", url: "https://zh.moegirl.org.cn", color: "#f28ead" },
-        { name: "Bangumi", url: "https://bgm.tv", color: "#333333" }
-    ]
-};
+const linksData = siteConfig.categories;
 
 // 动态生成链接网格
 function generateLinkGrid() {
@@ -93,7 +84,7 @@ function updateBackground() {
 }
 
 function applyBackground() {
-    const url = localStorage.getItem('bgImage');
+    const url = localStorage.getItem('bgImage') || siteConfig.defaultBackground;
     const blur = localStorage.getItem('bgBlur') || 5;
     
     let bgContainer = document.querySelector('.bg-container');
@@ -102,6 +93,12 @@ function applyBackground() {
         bgContainer = document.createElement('div');
         bgContainer.className = 'bg-container';
         document.body.insertBefore(bgContainer, document.body.firstChild);
+    }
+    
+    // 如果没有设置过背景图，使用默认背景图
+    if (!localStorage.getItem('bgImage')) {
+        localStorage.setItem('bgImage', siteConfig.defaultBackground);
+        document.getElementById('bgImageUrl').value = siteConfig.defaultBackground;
     }
     
     if (url) {
@@ -136,4 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const blurInput = document.getElementById('bgBlur');
     blurInput.value = savedBlur;
     document.getElementById('blurValue').textContent = savedBlur + 'px';
+    
+    // 设置背景图片输入框的默认值
+    const savedBgImage = localStorage.getItem('bgImage') || siteConfig.defaultBackground;
+    document.getElementById('bgImageUrl').value = savedBgImage;
 }); 
