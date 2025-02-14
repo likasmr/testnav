@@ -358,4 +358,28 @@ body {
 
 .setting-item button:hover {
     opacity: 0.9;
+}
+
+.share-btn {
+    width: 100%;
+    background: linear-gradient(45deg, #b48ead, #8fbcbb) !important;
+    margin-top: 10px;
+}
+
+.share-btn:hover {
+    opacity: 0.9;
+}
+
+.button-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.button-group button {
+    flex: 1;
+}
+
+.default-btn {
+    background: linear-gradient(45deg, #8fbcbb, #88c0d0) !important;
 } 

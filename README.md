@@ -20,6 +20,11 @@
 2. 登录Cloudflare控制台
 3. 选择Pages服务 -> 连接GitHub仓库
 4. 选择分支后自动部署
+5. 运行服务器脚本：
+   ```bash
+   npm install express
+   node server.js
+   ```
 
 ## 自定义配置
 1. 修改`config.js`中的配置项
