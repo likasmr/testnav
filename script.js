@@ -257,18 +257,20 @@ document.addEventListener('DOMContentLoaded', () => {
     generateLinkGrid();
     createSakura();
     
-    // 优先从 URL 加载配置
-    loadFromUrl();
-    
-    // 如果 URL 没有配置，尝试从远程获取
-    if (!new URLSearchParams(window.location.search).has('bg')) {
+    // 如果 localStorage 中已有背景配置，则直接使用
+    if (localStorage.getItem('bgImage')) {
+        applyBackground();
+    } else if (!new URLSearchParams(window.location.search).has('bg')) {
+        // 否则如果 URL 中没有配置，则尝试获取远程配置
         fetchRemoteConfig().catch(() => {
-            // 如果远程获取失败，使用本地配置
             applyBackground();
         });
+    } else {
+        // 否则，加载 URL 中的配置（例如通过分享链接加载）
+        loadFromUrl();
     }
     
-    // 设置默认值
+    // 设置背景模糊度的默认显示值
     const savedBlur = localStorage.getItem('bgBlur') || 5;
     const blurInput = document.getElementById('bgBlur');
     blurInput.value = savedBlur;
