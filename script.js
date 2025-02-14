@@ -113,6 +113,16 @@ function applyBackground() {
 // 添加模糊度显示更新
 document.getElementById('bgBlur').addEventListener('input', function() {
     document.getElementById('blurValue').textContent = this.value + 'px';
+    // 实时更新模糊效果
+    const bgContainer = document.querySelector('.bg-container');
+    if (bgContainer) {
+        bgContainer.style.filter = `blur(${this.value}px)`;
+    }
+});
+
+// 在滑块释放时保存设置
+document.getElementById('bgBlur').addEventListener('change', function() {
+    localStorage.setItem('bgBlur', this.value);
 });
 
 // 初始化
