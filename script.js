@@ -181,51 +181,9 @@ function loadFromUrl() {
     }
 }
 
-// 登录相关
-let authToken = localStorage.getItem('authToken');
+// 登录状态检查
+let authToken = null;
 let autoLoginAttempted = false;
-
-async function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const remember = document.getElementById('rememberLogin').checked;
-    
-    try {
-        const response = await fetch('/api/auth', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password })
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            authToken = data.token;
-            // 保存token和过期时间
-            localStorage.setItem('authToken', JSON.stringify({
-                token: authToken,
-                expiresAt: data.expiresAt
-            }));
-            
-            // 如果选择记住登录，保存加密的凭据
-            if (remember) {
-                const credentials = btoa(JSON.stringify({ 
-                    username, 
-                    password,
-                    expiresAt: data.expiresAt
-                }));
-                localStorage.setItem('credentials', credentials);
-            }
-            document.getElementById('loginOverlay').style.display = 'none';
-        } else {
-            alert('登录失败：' + data.message);
-        }
-    } catch (error) {
-        alert('登录失败，请重试');
-    }
-}
 
 // 检查登录状态
 async function checkAuth() {
@@ -239,34 +197,13 @@ async function checkAuth() {
         } else {
             // token已过期，清除存储
             localStorage.removeItem('authToken');
+            localStorage.removeItem('credentials');
             authToken = null;
         }
     }
 
-    if (!autoLoginAttempted) {
-        // 尝试自动登录
-        const credentials = localStorage.getItem('credentials');
-        if (credentials) {
-            try {
-                const { username, password, expiresAt } = JSON.parse(atob(credentials));
-                // 检查凭据是否过期
-                if (Date.now() < expiresAt) {
-                    document.getElementById('username').value = username;
-                    document.getElementById('password').value = password;
-                    document.getElementById('rememberLogin').checked = true;
-                    await login();
-                } else {
-                    // 凭据已过期，清除存储
-                    localStorage.removeItem('credentials');
-                }
-                autoLoginAttempted = true;
-                return;
-            } catch (error) {
-                console.error('自动登录失败');
-            }
-        }
-        document.getElementById('loginOverlay').style.display = 'flex';
-    }
+    // 如果没有有效的token，重定向到登录页面
+    window.location.href = '/login.html';
 }
 
 // 登出功能
@@ -274,7 +211,7 @@ function logout() {
     authToken = null;
     localStorage.removeItem('authToken');
     localStorage.removeItem('credentials');
-    document.getElementById('loginOverlay').style.display = 'flex';
+    window.location.href = '/login.html';
 }
 
 // 修改setAsDefault函数

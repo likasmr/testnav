@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>登录 - AnimeHome</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .login-container {
+            background: rgba(26, 27, 38, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            width: 300px;
+        }
+        
+        .login-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .login-title h1 {
+            font-size: 2rem;
+            background-image: linear-gradient(45deg, #ff6b9d, #b48ead);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-title">
+            <h1>AnimeHome</h1>
+            <p>登录以继续访问</p>
+        </div>
+        <div class="login-form">
+            <input type="text" id="username" placeholder="用户名">
+            <input type="password" id="password" placeholder="密码">
+            <div class="remember-login">
+                <input type="checkbox" id="rememberLogin" checked>
+                <label for="rememberLogin">记住登录（7天）</label>
+            </div>
+            <button onclick="login()">登录</button>
+        </div>
+    </div>
+
+    <script>
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('rememberLogin').checked;
+            
+            try {
+                const response = await fetch('/api/auth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // 保存token和过期时间
+                    localStorage.setItem('authToken', JSON.stringify({
+                        token: data.token,
+                        expiresAt: data.expiresAt
+                    }));
+                    
+                    // 如果选择记住登录，保存加密的凭据
+                    if (remember) {
+                        const credentials = btoa(JSON.stringify({ 
+                            username, 
+                            password,
+                            expiresAt: data.expiresAt
+                        }));
+                        localStorage.setItem('credentials', credentials);
+                    }
+                    
+                    // 登录成功后跳转到主页
+                    window.location.href = '/';
+                } else {
+                    alert('登录失败：' + data.message);
+                }
+            } catch (error) {
+                alert('登录失败，请重试');
+            }
+        }
+
+        // 回车键登录
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+    </script>
+</body>
+</html> 
