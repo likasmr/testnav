@@ -145,34 +145,6 @@ async function saveToCloudflare() {
     }
 }
 
-// 添加分享配置功能
-function shareConfig() {
-    const url = document.getElementById('bgImageUrl').value;
-    const blur = document.getElementById('bgBlur').value;
-    
-    // 生成带配置的分享链接
-    const shareUrl = new URL(window.location.href);
-    shareUrl.searchParams.set('bg', encodeURIComponent(url));
-    shareUrl.searchParams.set('blur', blur);
-    
-    // 复制链接到剪贴板
-    navigator.clipboard.writeText(shareUrl.toString());
-    alert('配置链接已复制到剪贴板！');
-}
-
-// 从 URL 读取配置
-function loadFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    const bgUrl = params.get('bg');
-    const blur = params.get('blur');
-    
-    if (bgUrl) {
-        document.getElementById('bgImageUrl').value = decodeURIComponent(bgUrl);
-        document.getElementById('bgBlur').value = blur || 5;
-        updateBackground();
-    }
-}
-
 // 登录状态检查
 let authToken = null;
 let autoLoginAttempted = false;
@@ -269,12 +241,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 如果 localStorage 中已有背景配置，则直接使用
     if (localStorage.getItem('bgImage')) {
         applyBackground();
-    } else if (!new URLSearchParams(window.location.search).has('bg')) {
+    } else {
         // 如果没有本地配置也没有URL参数，应用默认背景
         applyBackground();
-    } else {
-        // 否则，加载 URL 中的配置（例如通过分享链接加载）
-        loadFromUrl();
     }
     
     // 设置背景模糊度的默认显示值
