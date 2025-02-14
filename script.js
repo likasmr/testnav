@@ -77,7 +77,8 @@ function createSakura() {
 // 背景设置相关功能
 function toggleSettings() {
     const panel = document.getElementById('settingsPanel');
-    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    const currentDisplay = window.getComputedStyle(panel).display;
+    panel.style.display = currentDisplay === 'none' ? 'block' : 'none';
 }
 
 function updateBackground() {
