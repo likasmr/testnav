@@ -1,8 +1,23 @@
 // 动态生成链接网格
-function generateLinkGrid() {
+async function generateLinkGrid() {
     const container = document.getElementById('linksContainer');
+    let links;
     
-    for (const [category, items] of Object.entries(config.links)) {
+    try {
+        // 从API获取链接数据
+        const response = await fetch('/api/manage-links');
+        const data = await response.json();
+        links = data.links;
+    } catch (error) {
+        console.error('获取链接失败，使用默认配置');
+        links = config.links; // 作为后备使用默认配置
+    }
+    
+    // 清空容器
+    container.innerHTML = '';
+    
+    // 生成链接网格
+    for (const [category, items] of Object.entries(links)) {
         const categoryHTML = `
             <div class="category-card">
                 <h2>${category}</h2>
@@ -300,6 +315,7 @@ async function addLink() {
         if (data.success) {
             showToast('添加成功', 'success');
             loadLinks();
+            generateLinkGrid(); // 重新生成链接网格
             // 清空输入框
             document.getElementById('linkName').value = '';
             document.getElementById('linkUrl').value = '';
@@ -333,6 +349,7 @@ async function deleteLink(category, link) {
         if (data.success) {
             showToast('删除成功', 'success');
             loadLinks();
+            generateLinkGrid(); // 重新生成链接网格
         } else {
             throw new Error(data.message);
         }
@@ -344,7 +361,7 @@ async function deleteLink(category, link) {
 // 初始化
 document.addEventListener('DOMContentLoaded', async () => {
     checkAuth();
-    generateLinkGrid();
+    await generateLinkGrid(); // 等待链接加载完成
     createSakura();
     
     try {
