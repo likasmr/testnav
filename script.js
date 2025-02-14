@@ -7,10 +7,14 @@ async function generateLinkGrid() {
         // 从API获取链接数据
         const response = await fetch('/api/manage-links');
         const data = await response.json();
-        links = data.links;
+        // 合并默认链接和KV中的链接
+        links = {
+            ...config.links,  // 首先使用默认链接
+            ...data.links     // 然后用KV中的链接覆盖或添加
+        };
     } catch (error) {
         console.error('获取链接失败，使用默认配置');
-        links = config.links; // 作为后备使用默认配置
+        links = config.links;
     }
     
     // 清空容器
@@ -25,7 +29,7 @@ async function generateLinkGrid() {
                     ${items.map(item => `
                         <a href="${item.url}" 
                            class="link-item" 
-                           style="--hover-color: ${item.color}"
+                           style="--hover-color: ${item.color || '#ff6b9d'}"
                            target="_blank">
                             ${item.name}
                         </a>
@@ -231,16 +235,22 @@ async function loadLinks() {
         const data = await response.json();
         
         if (data.links) {
+            // 合并默认链接和KV中的链接
+            const allLinks = {
+                ...config.links,
+                ...data.links
+            };
+            
             // 更新分类下拉框
             const categorySelect = document.getElementById('linkCategory');
             categorySelect.innerHTML = '<option value="">选择分类...</option><option value="new">新建分类</option>';
             
-            Object.keys(data.links).forEach(category => {
+            Object.keys(allLinks).forEach(category => {
                 categorySelect.innerHTML += `<option value="${category}">${category}</option>`;
             });
             
             // 更新链接列表
-            updateLinksList(data.links);
+            updateLinksList(allLinks);
         }
     } catch (error) {
         showToast('加载链接失败', 'error');
@@ -280,20 +290,37 @@ function updateLinksList(links) {
 async function addLink() {
     let category = document.getElementById('linkCategory').value;
     const newCategory = document.getElementById('newCategory').value;
-    const name = document.getElementById('linkName').value;
-    const url = document.getElementById('linkUrl').value;
+    const name = document.getElementById('linkName').value.trim();
+    const url = document.getElementById('linkUrl').value.trim();
     const color = document.getElementById('linkColor').value;
     
+    // 改进的验证逻辑
     if (category === 'new') {
-        if (!newCategory) {
+        if (!newCategory.trim()) {
             showToast('请输入新分类名称', 'error');
             return;
         }
-        category = newCategory;
+        category = newCategory.trim();
+    } else if (!category) {
+        showToast('请选择或创建分类', 'error');
+        return;
     }
     
-    if (!category || !name || !url) {
-        showToast('请填写完整信息', 'error');
+    if (!name) {
+        showToast('请输入网站名称', 'error');
+        return;
+    }
+    
+    if (!url) {
+        showToast('请输入网站链接', 'error');
+        return;
+    }
+    
+    // 验证URL格式
+    try {
+        new URL(url);
+    } catch {
+        showToast('请输入有效的网站链接', 'error');
         return;
     }
     
@@ -315,11 +342,14 @@ async function addLink() {
         if (data.success) {
             showToast('添加成功', 'success');
             loadLinks();
-            generateLinkGrid(); // 重新生成链接网格
+            generateLinkGrid();
+            
             // 清空输入框
             document.getElementById('linkName').value = '';
             document.getElementById('linkUrl').value = '';
             document.getElementById('newCategory').value = '';
+            document.getElementById('linkCategory').value = ''; // 重置分类选择
+            document.getElementById('newCategory').style.display = 'none'; // 隐藏新分类输入框
         } else {
             throw new Error(data.message);
         }
