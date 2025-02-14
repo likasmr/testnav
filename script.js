@@ -34,7 +34,44 @@ function generateLinkGrid() {
     }
 }
 
+// 樱花飘落效果
+function createSakura() {
+    const container = document.getElementById('sakura-container');
+    const petalCount = 15; // 同时存在的花瓣数量
+    
+    function generatePetal() {
+        const petal = document.createElement('div');
+        petal.className = 'sakura';
+        
+        // 随机属性
+        const left = Math.random() * 100;
+        const duration = 8 + Math.random() * 10; // 8-18秒
+        const delay = Math.random() * -20;
+        const size = 10 + Math.random() * 10;
+        const opacity = 0.7 + Math.random() * 0.3;
+        
+        petal.style.cssText = `
+            left: ${left}%;
+            animation: fall ${duration}s linear ${delay}s infinite;
+            width: ${size}px;
+            height: ${size}px;
+            opacity: ${opacity};
+        `;
+        
+        container.appendChild(petal);
+        
+        // 自动移除旧花瓣
+        if (container.children.length > petalCount) {
+            container.removeChild(container.firstChild);
+        }
+    }
+    
+    // 每0.5秒生成新花瓣
+    setInterval(generatePetal, 500);
+}
+
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
     generateLinkGrid();
+    createSakura();
 }); 
