@@ -74,8 +74,48 @@ function createSakura() {
     setInterval(generatePetal, 300);
 }
 
+// 背景设置相关功能
+function toggleSettings() {
+    const panel = document.getElementById('settingsPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function updateBackground() {
+    const url = document.getElementById('bgImageUrl').value;
+    const opacity = document.getElementById('bgOpacity').value / 100;
+    
+    // 保存到localStorage
+    localStorage.setItem('bgImage', url);
+    localStorage.setItem('bgOpacity', opacity);
+    
+    applyBackground();
+}
+
+function applyBackground() {
+    const url = localStorage.getItem('bgImage');
+    const opacity = localStorage.getItem('bgOpacity') || 0.5;
+    
+    let bgContainer = document.querySelector('.bg-container');
+    
+    if (!bgContainer) {
+        bgContainer = document.createElement('div');
+        bgContainer.className = 'bg-container';
+        document.body.insertBefore(bgContainer, document.body.firstChild);
+    }
+    
+    if (url) {
+        bgContainer.style.backgroundImage = `url(${url})`;
+        bgContainer.style.opacity = opacity;
+    }
+}
+
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
     generateLinkGrid();
     createSakura();
+    applyBackground();
+
+    // 设置默认值
+    const savedOpacity = localStorage.getItem('bgOpacity') || 0.5;
+    document.getElementById('bgOpacity').value = savedOpacity * 100;
 }); 

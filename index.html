@@ -2,14 +2,33 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>柒驿 - 二次元导航站</title>
+    <title>AnimeHome - 你的二次元导航站</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- 设置按钮 -->
+    <div class="settings-btn" onclick="toggleSettings()">
+        <span>⚙️</span>
+    </div>
+    
+    <!-- 设置面板 -->
+    <div class="settings-panel" id="settingsPanel">
+        <h3>个性化设置</h3>
+        <div class="setting-item">
+            <label>背景图片URL：</label>
+            <input type="text" id="bgImageUrl" placeholder="输入图片链接...">
+            <button onclick="updateBackground()">应用</button>
+        </div>
+        <div class="setting-item">
+            <label>背景不透明度：</label>
+            <input type="range" id="bgOpacity" min="0" max="100" value="50">
+        </div>
+    </div>
+    
     <div class="container">
         <header class="banner">
-            <h1>柒驿</h1>
+            <h1>AnimeHome</h1>
             <div class="search-box">
                 <input type="text" placeholder="搜索或跳转...">
                 <button>GO!</button>
