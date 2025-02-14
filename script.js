@@ -36,7 +36,12 @@ function generateLinkGrid() {
 
 // 樱花飘落效果
 function createSakura() {
+    console.log('Initializing sakura effect...'); // 调试信息
     const container = document.getElementById('sakura-container');
+    if (!container) {
+        console.error('Sakura container not found!');
+        return;
+    }
     const petalCount = 15; // 同时存在的花瓣数量
     
     function generatePetal() {
