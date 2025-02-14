@@ -805,4 +805,62 @@ body {
 /* 添加背景点击效果 */
 .confirm-dialog:active {
     background: rgba(0, 0, 0, 0.6);
+}
+
+/* 网站信息预览 */
+.site-info {
+    margin: 12px 0;
+    padding: 12px;
+    background: rgba(41, 42, 58, 0.9);
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+}
+
+.site-preview {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.site-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.site-details {
+    flex: 1;
+}
+
+.site-details input,
+.site-details textarea {
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    resize: none;
+}
+
+.fetch-info-btn {
+    padding: 8px 16px;
+    background: linear-gradient(45deg, #8fbcbb, #88c0d0);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.fetch-info-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(143, 188, 187, 0.3);
+}
+
+.fetch-info-btn:active {
+    transform: translateY(1px);
 } 

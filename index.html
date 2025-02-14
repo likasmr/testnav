@@ -54,8 +54,17 @@
                     <option value="new">新建分类</option>
                 </select>
                 <input type="text" id="newCategory" placeholder="新分类名称" style="display: none;">
-                <input type="text" id="linkName" placeholder="网站名称">
                 <input type="text" id="linkUrl" placeholder="网站链接">
+                <button onclick="fetchSiteInfo()" class="fetch-info-btn">获取信息</button>
+                <div class="site-info" id="siteInfo" style="display: none;">
+                    <div class="site-preview">
+                        <img id="siteIcon" src="" alt="" class="site-icon">
+                        <div class="site-details">
+                            <input type="text" id="linkName" placeholder="网站名称">
+                            <textarea id="linkDescription" placeholder="网站描述" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
                 <input type="color" id="linkColor" value="#ff6b9d">
                 <button onclick="addLink()" class="add-btn">添加链接</button>
             </div>

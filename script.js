@@ -591,4 +591,53 @@ async function resetToDefaultLinks() {
     } catch (error) {
         showToast('恢复默认链接失败', 'error');
     }
+}
+
+// 获取网站信息
+async function fetchSiteInfo() {
+    const urlInput = document.getElementById('linkUrl');
+    const url = urlInput.value.trim();
+    
+    if (!url) {
+        showToast('请输入网站链接', 'error');
+        return;
+    }
+    
+    try {
+        new URL(url);
+    } catch {
+        showToast('请输入有效的网站链接', 'error');
+        return;
+    }
+    
+    showToast('正在获取网站信息...', 'info');
+    
+    try {
+        const response = await fetch(`/api/fetch-site-info?url=${encodeURIComponent(url)}`);
+        const data = await response.json();
+        
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        // 显示网站信息区域
+        document.getElementById('siteInfo').style.display = 'block';
+        
+        // 填充信息
+        document.getElementById('linkName').value = data.title || '';
+        document.getElementById('linkDescription').value = data.description || '';
+        
+        // 设置网站图标
+        const iconImg = document.getElementById('siteIcon');
+        if (data.icon) {
+            iconImg.src = data.icon;
+            iconImg.onerror = () => {
+                iconImg.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>';
+            };
+        }
+        
+        showToast('获取网站信息成功', 'success');
+    } catch (error) {
+        showToast('获取网站信息失败: ' + error.message, 'error');
+    }
 } 
