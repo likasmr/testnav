@@ -269,4 +269,187 @@ document.addEventListener('DOMContentLoaded', async () => {
     settingsBtn.addEventListener('mouseleave', hidePanel);
     settingsPanel.addEventListener('mouseenter', showPanel);
     settingsPanel.addEventListener('mouseleave', hidePanel);
-}); 
+});
+
+// 链接管理相关变量
+let currentLinks = {};
+let editingLinkId = null;
+
+// 标签页切换
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
+        
+        if (btn.dataset.tab === 'links') {
+            loadLinks();
+        }
+    });
+});
+
+// 加载链接
+async function loadLinks() {
+    try {
+        const response = await fetch('/api/manage-links');
+        currentLinks = await response.json();
+        renderLinksList();
+        updateCategorySelect();
+    } catch (error) {
+        showToast('加载链接失败', 'error');
+    }
+}
+
+// 渲染链接列表
+function renderLinksList() {
+    const container = document.getElementById('manageLinksList');
+    container.innerHTML = '';
+    
+    Object.entries(currentLinks).forEach(([category, items]) => {
+        const categoryHtml = `
+            <div class="link-category">
+                <h4>${category}</h4>
+                ${items.map(item => `
+                    <div class="link-item-manage">
+                        <div class="link-info">
+                            <div class="link-name">${item.name}</div>
+                            <div class="link-url">${item.url}</div>
+                        </div>
+                        <div class="link-actions">
+                            <button onclick="editLink('${category}', ${items.indexOf(item)})">✏️</button>
+                            <button onclick="deleteLink('${category}', ${items.indexOf(item)})">🗑️</button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', categoryHtml);
+    });
+}
+
+// 更新分类选择框
+function updateCategorySelect() {
+    const select = document.getElementById('linkCategory');
+    select.innerHTML = '<option value="">新建分类...</option>';
+    
+    Object.keys(currentLinks).forEach(category => {
+        select.insertAdjacentHTML('beforeend', `
+            <option value="${category}">${category}</option>
+        `);
+    });
+}
+
+// 显示添加链接模态框
+function showAddLinkModal() {
+    document.getElementById('linkModal').style.display = 'block';
+    editingLinkId = null;
+}
+
+// 关闭模态框
+function closeLinkModal() {
+    document.getElementById('linkModal').style.display = 'none';
+    clearModalForm();
+}
+
+// 清空表单
+function clearModalForm() {
+    document.getElementById('linkCategory').value = '';
+    document.getElementById('newCategory').value = '';
+    document.getElementById('linkName').value = '';
+    document.getElementById('linkUrl').value = '';
+    document.getElementById('linkColor').value = '#ff6b9d';
+    editingLinkId = null;
+}
+
+// 保存链接
+async function saveLinkChanges() {
+    const category = document.getElementById('linkCategory').value;
+    const newCategory = document.getElementById('newCategory').value;
+    const name = document.getElementById('linkName').value;
+    const url = document.getElementById('linkUrl').value;
+    const color = document.getElementById('linkColor').value;
+    
+    if (!name || !url) {
+        showToast('请填写完整信息', 'error');
+        return;
+    }
+    
+    const finalCategory = category || newCategory;
+    if (!finalCategory) {
+        showToast('请选择或创建分类', 'error');
+        return;
+    }
+    
+    // 创建或更新链接
+    if (!currentLinks[finalCategory]) {
+        currentLinks[finalCategory] = [];
+    }
+    
+    const newLink = { name, url, color };
+    
+    if (editingLinkId !== null) {
+        currentLinks[finalCategory][editingLinkId] = newLink;
+    } else {
+        currentLinks[finalCategory].push(newLink);
+    }
+    
+    try {
+        await saveLinks();
+        showToast('保存成功', 'success');
+        closeLinkModal();
+        renderLinksList();
+        generateLinkGrid(); // 重新生成主页链接
+    } catch (error) {
+        showToast('保存失败', 'error');
+    }
+}
+
+// 保存到服务器
+async function saveLinks() {
+    const response = await fetch('/api/manage-links', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({ links: currentLinks })
+    });
+    
+    if (!response.ok) {
+        throw new Error('保存失败');
+    }
+}
+
+// 编辑链接
+function editLink(category, index) {
+    const link = currentLinks[category][index];
+    editingLinkId = index;
+    
+    document.getElementById('linkCategory').value = category;
+    document.getElementById('linkName').value = link.name;
+    document.getElementById('linkUrl').value = link.url;
+    document.getElementById('linkColor').value = link.color || '#ff6b9d';
+    
+    document.getElementById('linkModal').style.display = 'block';
+}
+
+// 删除链接
+async function deleteLink(category, index) {
+    if (!confirm('确定要删除这个链接吗？')) return;
+    
+    currentLinks[category].splice(index, 1);
+    if (currentLinks[category].length === 0) {
+        delete currentLinks[category];
+    }
+    
+    try {
+        await saveLinks();
+        showToast('删除成功', 'success');
+        renderLinksList();
+        generateLinkGrid();
+    } catch (error) {
+        showToast('删除失败', 'error');
+    }
+} 

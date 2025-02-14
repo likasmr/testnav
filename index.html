@@ -18,19 +18,40 @@
     <!-- 设置面板 -->
     <div class="settings-panel" id="settingsPanel">
         <h3>个性化设置</h3>
-        <div class="setting-item">
-            <label>背景图片URL：</label>
-            <input type="text" id="bgImageUrl" placeholder="输入图片链接...">
-            <div class="button-group">
-                <button onclick="updateBackground()">应用</button>
-                <button onclick="setAsDefault()" class="default-btn">设为默认</button>
+        <div class="settings-tabs">
+            <button class="tab-btn active" data-tab="appearance">外观设置</button>
+            <button class="tab-btn" data-tab="links">链接管理</button>
+        </div>
+        
+        <!-- 外观设置面板 -->
+        <div class="tab-content active" id="appearanceTab">
+            <div class="setting-item">
+                <label>背景图片URL：</label>
+                <input type="text" id="bgImageUrl" placeholder="输入图片链接...">
+                <div class="button-group">
+                    <button onclick="updateBackground()">应用</button>
+                    <button onclick="setAsDefault()" class="default-btn">设为默认</button>
+                </div>
+            </div>
+            <div class="setting-item">
+                <label>背景模糊度：</label>
+                <input type="range" id="bgBlur" min="0" max="20" value="5" step="1">
+                <span id="blurValue">5px</span>
             </div>
         </div>
-        <div class="setting-item">
-            <label>背景模糊度：</label>
-            <input type="range" id="bgBlur" min="0" max="20" value="5" step="1">
-            <span id="blurValue">5px</span>
+        
+        <!-- 链接管理面板 -->
+        <div class="tab-content" id="linksTab">
+            <div class="setting-item">
+                <button onclick="showAddLinkModal()" class="add-btn">
+                    ➕ 添加新链接
+                </button>
+                <div class="links-list" id="manageLinksList">
+                    <!-- 动态生成的链接列表 -->
+                </div>
+            </div>
         </div>
+        
         <div class="setting-item">
             <button onclick="logout()" class="logout-btn">
                 🚪 退出登录
@@ -56,6 +77,38 @@
     
     <!-- 樱花飘落效果 -->
     <div id="sakura-container"></div>
+    
+    <!-- 添加/编辑链接的模态框 -->
+    <div class="modal" id="linkModal">
+        <div class="modal-content">
+            <h3>添加/编辑链接</h3>
+            <div class="modal-form">
+                <div class="form-group">
+                    <label>分类：</label>
+                    <select id="linkCategory">
+                        <option value="">新建分类...</option>
+                    </select>
+                    <input type="text" id="newCategory" placeholder="新分类名称" style="display: none;">
+                </div>
+                <div class="form-group">
+                    <label>名称：</label>
+                    <input type="text" id="linkName" placeholder="网站名称">
+                </div>
+                <div class="form-group">
+                    <label>URL：</label>
+                    <input type="text" id="linkUrl" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label>颜色：</label>
+                    <input type="color" id="linkColor" value="#ff6b9d">
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button onclick="saveLinkChanges()" class="save-btn">保存</button>
+                <button onclick="closeLinkModal()" class="cancel-btn">取消</button>
+            </div>
+        </div>
+    </div>
     
     <script src="config.js"></script>
     <script src="toast.js"></script>
