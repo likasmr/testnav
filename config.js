@@ -1,5 +1,5 @@
 const siteConfig = {
-    defaultBackground: "https://你的默认背景图片地址",
+    defaultBackground: "https://www.loliapi.com/acg/",
     categories: {
         "追番平台": [
             { name: "哔哩哔哩", url: "https://www.bilibili.com", color: "#00a1d6" },
