@@ -195,6 +195,9 @@ function showConfirmDialog() {
     // 强制重排以触发动画
     dialog.offsetHeight;
     dialog.classList.add('show');
+    
+    // 添加ESC键监听
+    document.addEventListener('keydown', handleEscKey);
 }
 
 // 隐藏确认对话框
@@ -202,12 +205,42 @@ function hideConfirmDialog() {
     const dialog = document.getElementById('confirmDialog');
     dialog.classList.add('hide');
     dialog.classList.remove('show');
+    
+    // 移除ESC键监听
+    document.removeEventListener('keydown', handleEscKey);
+    
     // 等待动画完成后隐藏
     setTimeout(() => {
         dialog.classList.remove('hide');
         dialog.style.display = 'none';
     }, 200);
 }
+
+// 处理ESC键
+function handleEscKey(event) {
+    if (event.key === 'Escape') {
+        hideConfirmDialog();
+    }
+}
+
+// 处理点击事件
+document.addEventListener('DOMContentLoaded', () => {
+    const dialog = document.getElementById('confirmDialog');
+    const content = dialog.querySelector('.confirm-content');
+    
+    // 点击空白区域关闭
+    dialog.addEventListener('click', (e) => {
+        // 如果点击的是对话框背景（而不是内容区域），则关闭对话框
+        if (e.target === dialog) {
+            hideConfirmDialog();
+        }
+    });
+    
+    // 防止点击内容区域时关闭
+    content.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+});
 
 // 确认退出
 function confirmLogout() {
