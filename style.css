@@ -1,6 +1,8 @@
 :root {
-    --main-color: #ff7faa;
-    --bg-gradient: linear-gradient(45deg, #f3d7da 0%, #a8d8f8 100%);
+    --main-color: #ff69b4;
+    --secondary-color: #ff9cd9;
+    --bg-gradient: linear-gradient(135deg, #ffe6f0 0%, #ffb3d9 100%);
+    --card-bg: rgba(255, 255, 255, 0.95);
 }
 
 body {
@@ -30,6 +32,86 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     margin: 2rem 0;
+}
+
+/* 按钮美化 */
+.search-box button {
+    background: linear-gradient(45deg, #ff6b9d, #ff8fab);
+    border: none;
+    border-radius: 25px;
+    padding: 12px 30px;
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(255,107,157,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.search-box button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255,107,157,0.4);
+}
+
+/* 分类卡片立体化 */
+.category-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(255,182,193,0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.category-card h2 {
+    color: #ff3377;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(255,51,119,0.1);
+}
+
+/* 链接项动画效果 */
+.link-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.9);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+}
+
+.link-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: 0.5s;
+}
+
+.link-item:hover {
+    transform: translateX(10px);
+    box-shadow: 0 6px 20px rgba(255,107,157,0.2);
+    background: linear-gradient(45deg, var(--hover-color), #ffffff);
+}
+
+.link-item:hover::before {
+    left: 100%;
+}
+
+/* 页脚美化 */
+.waifu-footer {
+    background: linear-gradient(90deg, #ff99cc, #ff6699);
+    border-radius: 15px;
+    padding: 1rem;
+    margin-top: 2rem;
+    color: white;
+    text-align: center;
+    font-size: 0.9rem;
 }
 
 /* 更多样式细节... */ 
