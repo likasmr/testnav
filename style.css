@@ -282,48 +282,101 @@ body {
     position: fixed;
     top: 20px;
     right: 20px;
-    width: 40px;
-    height: 40px;
-    background: rgba(26, 27, 38, 0.8);
-    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    background: rgba(26, 27, 38, 0.95);
+    border-radius: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     z-index: 1000;
-    transition: transform 0.3s;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .settings-btn:hover {
-    transform: rotate(90deg);
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.settings-btn span {
+    font-size: 24px;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-btn:hover span {
+    transform: rotate(180deg);
 }
 
 /* 设置面板 */
 .settings-panel {
     position: fixed;
-    top: 70px;
+    top: 80px;
     right: 20px;
-    width: 300px;
-    background: rgba(26, 27, 38, 0.95);
-    border-radius: 15px;
+    visibility: hidden;
+    opacity: 0;
+    background: rgba(26, 27, 38, 0.98);
     padding: 20px;
+    border-radius: 15px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
     border: 1px solid var(--card-border);
     z-index: 999;
-    display: none;
+    min-width: 300px;
+    transform: translateY(-20px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.settings-panel.show {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* 创建一个连接区域，确保鼠标移动到面板时不会消失 */
+.settings-btn::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100px;
+    height: 20px;
 }
 
 .settings-panel h3 {
     color: var(--heading-color);
     margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+}
+
+.settings-panel.show h3 {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .setting-item {
-    margin-bottom: 15px;
+    margin-bottom: 1rem;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.settings-panel.show .setting-item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.settings-panel.show .setting-item:nth-child(1) { transition-delay: 0.2s; }
+.settings-panel.show .setting-item:nth-child(2) { transition-delay: 0.3s; }
+.settings-panel.show .setting-item:nth-child(3) { transition-delay: 0.4s; }
 
 .setting-item label {
     display: block;

@@ -63,12 +63,6 @@ function createSakura() {
 }
 
 // 背景设置相关功能
-function toggleSettings() {
-    const panel = document.getElementById('settingsPanel');
-    const currentDisplay = window.getComputedStyle(panel).display;
-    panel.style.display = currentDisplay === 'none' ? 'block' : 'none';
-}
-
 function updateBackground() {
     const url = document.getElementById('bgImageUrl').value;
     const blur = document.getElementById('bgBlur').value;
@@ -251,4 +245,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     const blurInput = document.getElementById('bgBlur');
     blurInput.value = savedBlur;
     document.getElementById('blurValue').textContent = savedBlur + 'px';
+
+    // 设置面板交互
+    const settingsBtn = document.querySelector('.settings-btn');
+    const settingsPanel = document.getElementById('settingsPanel');
+    let timeoutId;
+
+    function showPanel() {
+        clearTimeout(timeoutId);
+        settingsPanel.classList.add('show');
+    }
+
+    function hidePanel() {
+        timeoutId = setTimeout(() => {
+            settingsPanel.classList.remove('show');
+        }, 300); // 添加一点延迟，使交互更流畅
+    }
+
+    settingsBtn.addEventListener('mouseenter', showPanel);
+    settingsBtn.addEventListener('mouseleave', hidePanel);
+    settingsPanel.addEventListener('mouseenter', showPanel);
+    settingsPanel.addEventListener('mouseleave', hidePanel);
 }); 
