@@ -181,8 +181,50 @@ function loadFromUrl() {
     }
 }
 
-// 设为默认背景
+// 登录相关
+let authToken = localStorage.getItem('authToken');
+
+async function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    try {
+        const response = await fetch('/api/auth', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            authToken = data.token;
+            localStorage.setItem('authToken', authToken);
+            document.getElementById('loginOverlay').style.display = 'none';
+        } else {
+            alert('登录失败：' + data.message);
+        }
+    } catch (error) {
+        alert('登录失败，请重试');
+    }
+}
+
+// 检查登录状态
+function checkAuth() {
+    if (!authToken) {
+        document.getElementById('loginOverlay').style.display = 'flex';
+    }
+}
+
+// 修改setAsDefault函数
 async function setAsDefault() {
+    if (!authToken) {
+        alert('请先登录！');
+        return;
+    }
+
     const url = document.getElementById('bgImageUrl').value;
     if (!url) {
         alert('请先输入图片URL！');
@@ -190,11 +232,11 @@ async function setAsDefault() {
     }
 
     try {
-        // 发送请求到你的服务器更新config.js
         const response = await fetch('/api/update-config', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
             },
             body: JSON.stringify({
                 defaultBgImage: url
@@ -203,19 +245,19 @@ async function setAsDefault() {
 
         if (response.ok) {
             alert('已设置为默认背景！');
-            // 更新当前config对象
             config.defaultBgImage = url;
         } else {
             throw new Error('设置失败');
         }
     } catch (error) {
-        alert('设置失败，请确保服务器正常运行');
+        alert('设置失败，请确保已登录');
         console.error('Error:', error);
     }
 }
 
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
+    checkAuth();
     generateLinkGrid();
     createSakura();
     
