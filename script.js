@@ -83,18 +83,18 @@ function toggleSettings() {
 
 function updateBackground() {
     const url = document.getElementById('bgImageUrl').value;
-    const opacity = document.getElementById('bgOpacity').value / 100;
+    const blur = document.getElementById('bgBlur').value;
     
     // 保存到localStorage
     localStorage.setItem('bgImage', url);
-    localStorage.setItem('bgOpacity', opacity);
+    localStorage.setItem('bgBlur', blur);
     
     applyBackground();
 }
 
 function applyBackground() {
     const url = localStorage.getItem('bgImage');
-    const opacity = localStorage.getItem('bgOpacity') || 0.5;
+    const blur = localStorage.getItem('bgBlur') || 5;
     
     let bgContainer = document.querySelector('.bg-container');
     
@@ -106,9 +106,14 @@ function applyBackground() {
     
     if (url) {
         bgContainer.style.backgroundImage = `url(${url})`;
-        bgContainer.style.opacity = opacity;
+        bgContainer.style.filter = `blur(${blur}px)`;
     }
 }
+
+// 添加模糊度显示更新
+document.getElementById('bgBlur').addEventListener('input', function() {
+    document.getElementById('blurValue').textContent = this.value + 'px';
+});
 
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
@@ -117,6 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
     applyBackground();
 
     // 设置默认值
-    const savedOpacity = localStorage.getItem('bgOpacity') || 0.5;
-    document.getElementById('bgOpacity').value = savedOpacity * 100;
+    const savedBlur = localStorage.getItem('bgBlur') || 5;
+    const blurInput = document.getElementById('bgBlur');
+    blurInput.value = savedBlur;
+    document.getElementById('blurValue').textContent = savedBlur + 'px';
 }); 
