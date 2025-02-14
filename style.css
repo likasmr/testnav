@@ -282,10 +282,10 @@ body {
     position: fixed;
     top: 20px;
     right: 20px;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     background: rgba(26, 27, 38, 0.95);
-    border-radius: 25px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -297,12 +297,12 @@ body {
 }
 
 .settings-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(255, 107, 157, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .settings-btn span {
-    font-size: 24px;
+    font-size: 1.5rem;
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -315,75 +315,49 @@ body {
     position: fixed;
     top: 80px;
     right: 20px;
-    opacity: 0;
-    visibility: hidden;
     background: rgba(26, 27, 38, 0.98);
-    padding: 20px;
     border-radius: 15px;
+    padding: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
     border: 1px solid var(--card-border);
     z-index: 999;
-    min-width: 300px;
-    transform: translateY(-10px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px) scale(0.95);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.settings-btn:hover + .settings-panel,
-.settings-panel:hover {
+.settings-panel.show {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
-/* 设置面板显示时的遮罩 */
+/* 添加箭头指示器 */
 .settings-panel::before {
     content: '';
     position: absolute;
-    top: -20px;
-    right: 15px;
-    width: 20px;
-    height: 20px;
+    top: -8px;
+    right: 20px;
+    width: 16px;
+    height: 16px;
     background: rgba(26, 27, 38, 0.98);
     transform: rotate(45deg);
     border-left: 1px solid var(--card-border);
     border-top: 1px solid var(--card-border);
-    z-index: -1;
 }
 
 .settings-panel h3 {
     color: var(--heading-color);
     margin-top: 0;
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
-}
-
-.settings-btn:hover + .settings-panel h3,
-.settings-panel:hover h3 {
-    opacity: 1;
-    transform: translateY(0);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
 }
 
 .setting-item {
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 15px;
 }
-
-.settings-btn:hover + .settings-panel .setting-item,
-.settings-panel:hover .setting-item {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* 为每个设置项添加延迟动画 */
-.setting-item:nth-child(1) { transition-delay: 0.15s; }
-.setting-item:nth-child(2) { transition-delay: 0.2s; }
-.setting-item:nth-child(3) { transition-delay: 0.25s; }
 
 .setting-item label {
     display: block;

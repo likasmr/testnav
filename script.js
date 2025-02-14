@@ -245,4 +245,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     const blurInput = document.getElementById('bgBlur');
     blurInput.value = savedBlur;
     document.getElementById('blurValue').textContent = savedBlur + 'px';
+
+    // 设置面板交互
+    const settingsBtn = document.querySelector('.settings-btn');
+    const settingsPanel = document.getElementById('settingsPanel');
+    let timeoutId;
+
+    // 鼠标进入按钮或面板时显示
+    function showPanel() {
+        clearTimeout(timeoutId);
+        settingsPanel.classList.add('show');
+    }
+
+    // 鼠标离开按钮和面板时延迟隐藏
+    function hidePanel() {
+        timeoutId = setTimeout(() => {
+            settingsPanel.classList.remove('show');
+        }, 300); // 300ms延迟，避免鼠标移动到面板时闪烁
+    }
+
+    // 绑定事件
+    settingsBtn.addEventListener('mouseenter', showPanel);
+    settingsBtn.addEventListener('mouseleave', hidePanel);
+    settingsPanel.addEventListener('mouseenter', showPanel);
+    settingsPanel.addEventListener('mouseleave', hidePanel);
 }); 
