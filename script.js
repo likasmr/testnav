@@ -37,7 +37,7 @@ function generateLinkGrid() {
 // 樱花飘落效果
 function createSakura() {
     const container = document.getElementById('sakura-container');
-    const petalCount = 15; // 同时存在的花瓣数量
+    const petalCount = 30; // 增加花瓣数量
     
     function generatePetal() {
         const petal = document.createElement('div');
@@ -45,33 +45,33 @@ function createSakura() {
         
         // 随机属性
         const left = Math.random() * 100;
-        const duration = 12 + Math.random() * 8; // 12-20秒
-        const delay = Math.random() * -20;
-        const size = 8 + Math.random() * 8; // 更小的花瓣
+        const duration = 10 + Math.random() * 5;
+        const size = 8 + Math.random() * 8;
         const opacity = 0.7 + Math.random() * 0.3;
-        const rotate = Math.random() * 360; // 初始旋转角度
         
         petal.style.cssText = `
             left: ${left}%;
-            animation-duration: ${duration}s;
-            animation-delay: ${delay}s;
+            animation: fall ${duration}s linear infinite;
             width: ${size}px;
             height: ${size}px;
             opacity: ${opacity};
-            transform: rotate(${rotate}deg);
-            filter: drop-shadow(0 0 2px rgba(255,182,193,0.3));
         `;
         
         container.appendChild(petal);
         
-        // 自动移除旧花瓣
-        if (container.children.length > petalCount) {
-            container.removeChild(container.firstChild);
-        }
+        // 自动移除超出视窗的花瓣
+        setTimeout(() => {
+            container.removeChild(petal);
+        }, duration * 1000);
     }
     
-    // 每0.8秒生成新花瓣，频率稍微降低
-    setInterval(generatePetal, 800);
+    // 立即生成一些花瓣
+    for(let i = 0; i < petalCount; i++) {
+        setTimeout(generatePetal, i * 300);
+    }
+    
+    // 持续生成新花瓣
+    setInterval(generatePetal, 300);
 }
 
 // 初始化
