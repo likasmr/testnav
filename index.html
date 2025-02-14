@@ -2,20 +2,37 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>二次元导航</title>
+    <title>萌系导航 - 你的二次元入口</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+    <div class="anime-girl"></div>
+    
     <div class="container">
-        <h1>欢迎来到我的二次元导航</h1>
-        <div class="links">
-            <a href="https://www.bilibili.com" target="_blank">哔哩哔哩</a>
-            <a href="https://www.acfun.cn" target="_blank">AcFun</a>
-            <a href="https://www.pixiv.net" target="_blank">Pixiv</a>
-            <a href="https://www.nicovideo.jp" target="_blank">Niconico</a>
+        <h1 class="title">🌸 二次元导航站</h1>
+        
+        <!-- 搜索框 -->
+        <div class="search-box">
+            <input type="text" id="search" placeholder="谷歌搜索...">
+            <button onclick="performSearch()"><i class="fas fa-search"></i></button>
         </div>
+
+        <!-- 链接分类 -->
+        <div class="category">
+            <h2><i class="fas fa-star"></i> 常用网站</h2>
+            <div class="links">
+                <a href="https://www.bilibili.com" target="_blank" class="link-card">
+                    <i class="fab fa-bilibili"></i>
+                    <span>哔哩哔哩</span>
+                </a>
+                <!-- 更多链接... -->
+            </div>
+        </div>
+
+        <!-- 更多分类... -->
     </div>
+
     <script src="script.js"></script>
 </body>
 </html> 
