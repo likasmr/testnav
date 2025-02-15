@@ -53,45 +53,32 @@ body {
 
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
     margin: 2rem 0;
 }
 
-/* 按钮美化 */
-.search-box button {
-    background: linear-gradient(45deg, #ff6b9d, #b48ead);
-    border: none;
+/* 搜索框样式 */
+.search-container {
+    background: rgba(26, 27, 38, 0.95);
+    padding: 1rem;
     border-radius: 8px;
-    padding: 12px 20px;
-    color: white;
-    font-size: 1rem;
-    transition: transform 0.2s;
+    margin-bottom: 2rem;
 }
 
-.search-box button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255,107,157,0.4);
-}
-
-/* 搜索框优化 */
 .search-box {
     width: 100%;
-    max-width: 800px;
-    margin: 0 auto 2rem;
-    padding: 1rem;
-    background: rgba(26, 27, 38, 0.7);
-    border-radius: 8px;
-    border: 1px solid var(--card-border);
+    display: flex;
+    gap: 10px;
 }
 
 .search-box input {
-    width: 100%;
+    flex: 1;
     border: none;
     border-radius: 8px;
     padding: 12px 20px;
     font-size: 1rem;
-    background: rgba(41, 42, 58, 0.5);
+    background: rgba(255, 255, 255, 0.1);
     color: var(--text-color);
 }
 
@@ -105,7 +92,7 @@ body {
 .category-card {
     background: rgba(26, 27, 38, 0.95);
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
     border: 1px solid var(--card-border);
@@ -114,22 +101,12 @@ body {
     overflow: hidden;
 }
 
-.category-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(90deg, #ff6b9d, #b48ead);
-}
-
 .category-card h2 {
     color: var(--heading-color);
     font-size: 1.4rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--card-border);
+    margin: 0;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
     text-shadow: 2px 2px 4px rgba(255,51,119,0.1);
 }
 
@@ -140,16 +117,18 @@ body {
 
 /* 链接项动画效果 */
 .link-item {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1rem;
-    padding: 1rem;
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
     margin: 8px 0;
     border-radius: 8px;
-    background: rgba(41, 42, 58, 0.5);
+    background: rgba(255, 255, 255, 0.05);
     transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
     text-decoration: none;
-    color: var(--text-color);
+    color: var(--link-color);
+    font-weight: 500;
 }
 
 .link-item::before {
@@ -166,39 +145,12 @@ body {
 .link-item:hover {
     transform: translateX(5px);
     box-shadow: 0 5px 15px rgba(var(--hover-color), 0.15);
-    background: rgba(41, 42, 58, 0.9);
+    background: rgba(255, 255, 255, 0.1);
     color: var(--heading-color);
 }
 
 .link-item:hover::before {
     left: 100%;
-}
-
-.link-item-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.link-item-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.link-item-title {
-    font-size: 1rem;
-    color: white;
-}
-
-.link-item-desc {
-    font-size: 0.85rem;
-    color: var(--text-color);
-    opacity: 0.7;
 }
 
 /* 页脚美化 */
@@ -986,23 +938,25 @@ body {
     padding-top: 1rem;
 }
 
-/* 分类标签 */
+/* 分类标签样式 */
 .category-tags {
     display: flex;
     gap: 0.5rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
+    padding: 1rem;
+    border-bottom: 1px solid var(--card-border);
 }
 
 .category-tag {
     padding: 0.5rem 1rem;
-    background: rgba(41, 42, 58, 0.5);
-    border-radius: 4px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
     color: var(--text-color);
+    font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.3s;
 }
 
+.category-tag:hover,
 .category-tag.active {
     background: var(--main-color);
     color: white;
