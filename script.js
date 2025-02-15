@@ -769,38 +769,30 @@ function updateDragFeedback(event) {
     }
 }
 
-// 显示设置面板
+// 显示设置模态框
 function showSettings() {
-    document.getElementById('settingsPanel').classList.add('show');
+    document.getElementById('settingsModal').classList.add('show');
 }
 
-// 隐藏设置面板
+// 隐藏设置模态框
 function hideSettings() {
-    document.getElementById('settingsPanel').classList.remove('show');
+    document.getElementById('settingsModal').classList.remove('show');
 }
 
-// 跳转到链接管理
-function gotoLinkManagement() {
-    window.location.href = '/manage-links.html';
-}
-
-// 在管理页面初始化
-if (window.location.pathname.includes('manage-links')) {
-    // 需要登录验证
-    checkAuth().then(() => {
-        loadCategories();
-        loadLinks();
+// 初始化标签页切换
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const tabId = this.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(tabId + 'Tab').classList.add('active');
     });
-}
+});
 
-async function loadCategories() {
-    const response = await fetch('/api/manage-links');
-    const data = await response.json();
-    const container = document.getElementById('categoryList');
-    
-    container.innerHTML = Object.keys(data.links).map(category => `
-        <div class="category-item" onclick="loadCategory('${category}')">
-            ${category} (${data.links[category].length})
-        </div>
-    `).join('');
-} 
+// 点击模态框外部关闭
+document.getElementById('settingsModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        hideSettings();
+    }
+}); 
