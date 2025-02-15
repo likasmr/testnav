@@ -18,7 +18,13 @@
     <!-- 设置面板 -->
     <div class="settings-panel" id="settingsPanel">
         <h3>个性化设置</h3>
-        <div class="settings-content">
+        <div class="settings-tabs">
+            <button class="tab-btn active" data-tab="background">背景设置</button>
+            <button class="tab-btn" data-tab="links">链接管理</button>
+        </div>
+        
+        <!-- 背景设置标签页 -->
+        <div class="tab-content active" id="backgroundTab">
             <div class="setting-item">
                 <label>背景图片URL：</label>
                 <input type="text" id="bgImageUrl" placeholder="输入图片链接...">
@@ -34,10 +40,37 @@
             </div>
         </div>
         
-        <div class="setting-item">
-            <button onclick="window.location.href='manage.html'" class="manage-btn">
-                ⚙️ 链接管理
-            </button>
+        <!-- 链接管理标签页 -->
+        <div class="tab-content" id="linksTab">
+            <div class="setting-item">
+                <button onclick="resetToDefaultLinks()" class="reset-btn">
+                    🔄 恢复默认链接
+                </button>
+            </div>
+            <div class="setting-item">
+                <label>添加新链接：</label>
+                <select id="linkCategory">
+                    <option value="">选择分类...</option>
+                    <option value="new">新建分类</option>
+                </select>
+                <input type="text" id="newCategory" placeholder="新分类名称" style="display: none;">
+                <input type="text" id="linkUrl" placeholder="网站链接">
+                <button onclick="fetchSiteInfo()" class="fetch-info-btn">获取信息</button>
+                <div class="site-info" id="siteInfo" style="display: none;">
+                    <div class="site-preview">
+                        <img id="siteIcon" src="" alt="" class="site-icon">
+                        <div class="site-details">
+                            <input type="text" id="linkName" placeholder="网站名称">
+                            <textarea id="linkDescription" placeholder="网站描述" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <input type="color" id="linkColor" value="#ff6b9d">
+                <button onclick="addLink()" class="add-btn">添加链接</button>
+            </div>
+            <div class="links-list" id="manageLinksList">
+                <!-- 动态生成的链接列表 -->
+            </div>
         </div>
         
         <div class="setting-item">
@@ -80,6 +113,56 @@
                 <button class="cancel-btn" onclick="hideConfirmDialog()">取消</button>
                 <button class="confirm-btn" onclick="confirmLogout()">确认退出</button>
             </div>
+        </div>
+    </div>
+    
+    <!-- 添加链接浮动按钮 -->
+    <button class="add-link-btn" onclick="showAddLinkModal()">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+    </button>
+    
+    <!-- 添加链接模态框 -->
+    <div class="add-link-modal" id="addLinkModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加新链接</h3>
+                <button class="modal-close" onclick="hideAddLinkModal()">×</button>
+            </div>
+            <form class="add-link-form" onsubmit="handleAddLink(event)">
+                <div class="form-group">
+                    <label>网站链接</label>
+                    <div class="url-input-group">
+                        <input type="url" id="linkUrl" placeholder="输入网站链接..." required>
+                        <button type="button" class="fetch-info-btn" onclick="fetchSiteInfo()">
+                            获取信息
+                        </button>
+                    </div>
+                </div>
+                <div class="site-info" id="siteInfo" style="display: none;">
+                    <div class="site-preview">
+                        <img id="siteIcon" src="" alt="" class="site-icon">
+                        <div class="site-details">
+                            <input type="text" id="linkName" placeholder="网站名称" required>
+                            <textarea id="linkDescription" placeholder="网站描述" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>分类</label>
+                    <select id="linkCategory" required>
+                        <option value="">选择分类...</option>
+                        <option value="new">新建分类</option>
+                    </select>
+                    <input type="text" id="newCategory" placeholder="新分类名称" style="display: none;">
+                </div>
+                <div class="form-group">
+                    <label>主题颜色</label>
+                    <input type="color" id="linkColor" value="#ff6b9d">
+                </div>
+                <button type="submit" class="submit-btn">添加链接</button>
+            </form>
         </div>
     </div>
     

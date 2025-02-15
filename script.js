@@ -767,4 +767,42 @@ function updateDragFeedback(event) {
         feedback.style.left = event.pageX + 10 + 'px';
         feedback.style.top = event.pageY + 10 + 'px';
     }
+}
+
+// 显示添加链接模态框
+function showAddLinkModal() {
+    const modal = document.getElementById('addLinkModal');
+    modal.classList.add('show');
+}
+
+// 隐藏添加链接模态框
+function hideAddLinkModal() {
+    const modal = document.getElementById('addLinkModal');
+    modal.classList.remove('show');
+    // 清空表单
+    document.querySelector('.add-link-form').reset();
+    document.getElementById('siteInfo').style.display = 'none';
+}
+
+// 处理添加链接
+async function handleAddLink(event) {
+    event.preventDefault();
+    
+    // 获取表单数据
+    const url = document.getElementById('linkUrl').value;
+    const name = document.getElementById('linkName').value;
+    const category = document.getElementById('linkCategory').value;
+    const newCategory = document.getElementById('newCategory').value;
+    const color = document.getElementById('linkColor').value;
+    
+    try {
+        // 添加链接逻辑...
+        await addLink();
+        
+        // 关闭模态框
+        hideAddLinkModal();
+        showToast('链接添加成功', 'success');
+    } catch (error) {
+        showToast('添加链接失败', 'error');
+    }
 } 
