@@ -303,11 +303,18 @@ async function loadLinks() {
         const response = await fetch('/api/manage-links');
         const data = await response.json();
         
-        // 保存获取到的链接数据
-        links = data.links || {};
-        
-        // 更新链接管理界面
-        updateLinksManagement();
+        if (data.links) {
+            // 更新分类下拉框
+            const categorySelect = document.getElementById('linkCategory');
+            categorySelect.innerHTML = '<option value="">选择分类...</option><option value="new">新建分类</option>';
+            
+            Object.keys(data.links).forEach(category => {
+                categorySelect.innerHTML += `<option value="${category}">${category}</option>`;
+            });
+            
+            // 更新链接列表
+            updateLinksList(data.links);
+        }
     } catch (error) {
         showToast('加载链接失败', 'error');
     }
@@ -762,145 +769,88 @@ function updateDragFeedback(event) {
     }
 }
 
-// 更新链接管理界面
-function updateLinksManagement() {
+// 生成可编辑的链接列表
+function generateEditableLinks(links) {
     const container = document.getElementById('categoryList');
     container.innerHTML = '';
     
     for (const [category, items] of Object.entries(links)) {
-        const categoryEl = document.createElement('div');
-        categoryEl.className = 'category-item';
-        categoryEl.innerHTML = `
-            <div class="category-header">
-                <h3 class="category-title" contenteditable="true" 
-                    onblur="updateCategoryName('${category}', this.textContent)">
-                    ${category}
-                </h3>
-                <div class="category-actions">
-                    <button class="delete-btn" onclick="deleteCategory('${category}')">删除</button>
+        const categoryHTML = `
+            <div class="editable-category">
+                <div class="category-header">
+                    <input type="text" value="${category}" 
+                           onchange="updateCategoryName('${category}', this.value)">
+                    <button onclick="deleteCategory('${category}')">删除分类</button>
+                </div>
+                <div class="editable-links">
+                    ${items.map((item, index) => `
+                        <div class="editable-link">
+                            <input type="text" value="${item.name}" 
+                                   onchange="updateLinkProperty('${category}', ${index}, 'name', this.value)">
+                            <input type="text" value="${item.url}" 
+                                   onchange="updateLinkProperty('${category}', ${index}, 'url', this.value)">
+                            <input type="color" value="${item.color || '#ff6b9d'}" 
+                                   onchange="updateLinkProperty('${category}', ${index}, 'color', this.value)">
+                            <button onclick="deleteLink('${category}', ${index})">删除</button>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
-            <div class="category-links">
-                ${items.map(item => `
-                    <div class="link-item-edit" data-url="${item.url}">
-                        <input type="text" class="link-name" value="${item.name}" 
-                               onchange="updateLink('${category}', '${item.url}', this)">
-                        <input type="text" class="link-url" value="${item.url}"
-                               onchange="updateLink('${category}', '${item.url}', this)">
-                        <input type="color" class="link-color" value="${item.color || '#ff6b9d'}"
-                               onchange="updateLink('${category}', '${item.url}', this)">
-                        <div class="link-actions">
-                            <button class="delete-btn" 
-                                    onclick="deleteLink('${category}', ${JSON.stringify(item).replace(/"/g, '&quot;')})">
-                                删除
-                            </button>
-                        </div>
-                    </div>
-                `).join('')}
-                <button class="add-link-btn" onclick="addNewLink('${category}')">
-                    <svg viewBox="0 0 24 24" width="20" height="20">
-                        <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                    </svg>
-                    添加新链接
-                </button>
-            </div>
         `;
-        container.appendChild(categoryEl);
+        container.insertAdjacentHTML('beforeend', categoryHTML);
     }
 }
 
-// 添加新分类
-async function addNewCategory() {
-    const name = await showPrompt('请输入分类名称');
-    if (!name) return;
-    
+// 更新分类名称
+async function updateCategoryName(oldName, newName) {
     try {
-        await fetch('/api/manage-links', {
+        const response = await fetch('/api/manage-links', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${authToken}`
             },
             body: JSON.stringify({
-                action: 'addCategory',
-                category: name
+                action: 'rename-category',
+                oldCategory: oldName,
+                newCategory: newName
             })
         });
         
-        await loadLinks();
-        updateLinksManagement();
-        showToast('分类添加成功', 'success');
+        if (response.ok) {
+            const data = await response.json();
+            generateEditableLinks(data.links);
+            generateLinkGrid();
+            showToast('分类名称已更新', 'success');
+        }
     } catch (error) {
-        showToast('添加分类失败', 'error');
+        showToast('更新失败', 'error');
     }
 }
 
-// 添加新链接到分类
-async function addNewLink(category) {
-    const url = await showPrompt('请输入链接地址');
-    if (!url) return;
-    
+// 更新链接属性
+async function updateLinkProperty(category, index, prop, value) {
     try {
-        // 获取网站信息
-        const response = await fetch(`/api/fetch-site-info?url=${encodeURIComponent(url)}`);
-        const data = await response.json();
-        
-        if (data.error) throw new Error(data.error);
-        
-        const link = {
-            name: data.title || url,
-            url: url,
-            color: '#ff6b9d'
-        };
-        
-        await fetch('/api/manage-links', {
+        const response = await fetch('/api/manage-links', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${authToken}`
             },
             body: JSON.stringify({
-                action: 'add',
+                action: 'update-link',
                 category,
-                link
+                index,
+                prop,
+                value
             })
         });
         
-        await loadLinks();
-        updateLinksManagement();
-        showToast('链接添加成功', 'success');
+        if (response.ok) {
+            generateLinkGrid();
+            showToast('链接已更新', 'success');
+        }
     } catch (error) {
-        showToast('添加链接失败', 'error');
-    }
-}
-
-// 更新链接信息
-async function updateLink(category, originalUrl, input) {
-    const item = input.closest('.link-item-edit');
-    const newData = {
-        name: item.querySelector('.link-name').value,
-        url: item.querySelector('.link-url').value,
-        color: item.querySelector('.link-color').value
-    };
-    
-    try {
-        await fetch('/api/manage-links', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`
-            },
-            body: JSON.stringify({
-                action: 'update',
-                category,
-                originalUrl,
-                link: newData
-            })
-        });
-        
-        await loadLinks();
-        showToast('链接更新成功', 'success');
-    } catch (error) {
-        showToast('更新链接失败', 'error');
+        showToast('更新失败', 'error');
     }
 } 
