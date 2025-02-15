@@ -801,4 +801,33 @@ function hideBgSettings() {
 function showLinkManager() {
     // 跳转到独立的链接管理页面
     window.location.href = '/links.html';
-} 
+}
+
+// 显示设置面板
+function showPanel(type) {
+    const panel = document.getElementById(`${type}Panel`);
+    panel.classList.add('show');
+    // 关闭设置菜单
+    document.getElementById('settingsMenu').classList.remove('show');
+}
+
+// 隐藏设置面板
+function hidePanel(type) {
+    const panel = document.getElementById(`${type}Panel`);
+    panel.classList.remove('show');
+    // 显示设置菜单
+    document.getElementById('settingsMenu').classList.add('show');
+}
+
+// 点击外部关闭面板
+document.addEventListener('click', (e) => {
+    const menu = document.getElementById('settingsMenu');
+    const btn = document.querySelector('.settings-btn');
+    const panels = document.querySelectorAll('.settings-panel');
+    
+    if (!menu.contains(e.target) && !btn.contains(e.target) && 
+        !Array.from(panels).some(panel => panel.contains(e.target))) {
+        menu.classList.remove('show');
+        panels.forEach(panel => panel.classList.remove('show'));
+    }
+}); 
