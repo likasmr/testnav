@@ -29,19 +29,14 @@ async function generateLinkGrid() {
     for (const [category, items] of Object.entries(links)) {
         const categoryHTML = `
             <div class="category-card">
-                <h3 class="category-title">${category}</h3>
+                <h2>${category}</h2>
                 <div class="link-list">
                     ${items.map(item => `
                         <a href="${item.url}" 
                            class="link-item" 
+                           style="--hover-color: ${item.color || '#ff6b9d'}"
                            target="_blank">
-                            <div class="link-item-icon">
-                                <img src="${item.icon || ''}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' width=\\'24\\' height=\\'24\\'><path fill=\\'rgba(255,255,255,0.6)\\' d=\\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z\\'/></svg>'">
-                            </div>
-                            <div class="link-item-content">
-                                <div class="link-item-title">${item.name}</div>
-                                <div class="link-item-desc">${item.description || ''}</div>
-                            </div>
+                            ${item.name}
                         </a>
                     `).join('')}
                 </div>
