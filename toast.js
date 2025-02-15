@@ -5,7 +5,6 @@ class Toast {
     }
 
     show(message, type = 'info') {
-        // 添加到队列
         this.queue.push({ message, type });
         if (!this.isProcessing) {
             this.processQueue();
@@ -31,42 +30,39 @@ class Toast {
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         
-        const icon = this.getIcon(type);
         toast.innerHTML = `
-            <div class="toast-content">
-                <div class="toast-icon">${icon}</div>
-                <div class="toast-message">${message}</div>
-            </div>
-            <div class="toast-progress"></div>
+            <div class="toast-icon">${this.getIcon(type)}</div>
+            <div class="toast-message">${message}</div>
+            <button class="toast-close" onclick="this.parentElement.remove()">
+                <svg viewBox="0 0 24 24" width="14" height="14">
+                    <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </button>
         `;
 
         container.appendChild(toast);
 
-        // 动画显示
         await new Promise(resolve => setTimeout(resolve, 100));
         toast.classList.add('show');
 
-        // 进度条动画
-        const progress = toast.querySelector('.toast-progress');
-        progress.style.width = '0%';
-
-        // 等待动画完成后移除
         await new Promise(resolve => setTimeout(resolve, 3000));
-        toast.classList.add('hide');
-        await new Promise(resolve => setTimeout(resolve, 300));
-        container.removeChild(toast);
+        if (toast.parentElement) {
+            toast.classList.add('hide');
+            await new Promise(resolve => setTimeout(resolve, 300));
+            toast.remove();
+        }
     }
 
     getIcon(type) {
         const icons = {
             success: `<svg viewBox="0 0 24 24" width="22" height="22">
-                        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
                     </svg>`,
             error: `<svg viewBox="0 0 24 24" width="22" height="22">
-                        <path fill="currentColor" d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+                        <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                     </svg>`,
             info: `<svg viewBox="0 0 24 24" width="22" height="22">
-                        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                        <path fill="currentColor" d="M13 9h-2V7h2v2zm0 8h-2v-6h2v6z"/>
                     </svg>`
         };
         return icons[type] || icons.info;
@@ -79,52 +75,4 @@ const toast = new Toast();
 // 导出便捷方法
 function showToast(message, type = 'info') {
     toast.show(message, type);
-}
-
-async function processToastQueue() {
-    if (toast.queue.length === 0 || toast.isProcessing) return;
-    
-    toast.isProcessing = true;
-    const { message, type } = toast.queue.shift();
-
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `
-        <div class="toast-content">
-            <span class="toast-icon">${toast.getIcon(type)}</span>
-            <span class="toast-message">${message}</span>
-        </div>
-        <div class="toast-progress"></div>
-    `;
-
-    document.body.appendChild(toast);
-    
-    // 强制重排以触发动画
-    toast.offsetHeight;
-    toast.classList.add('show');
-    
-    // 等待动画完成
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
-    toast.classList.remove('show');
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    document.body.removeChild(toast);
-    toast.isProcessing = false;
-    
-    // 处理队列中的下一个 toast
-    processToastQueue();
-}
-
-function getIconForType(type) {
-    switch (type) {
-        case 'success':
-            return '✓';
-        case 'error':
-            return '✕';
-        case 'warning':
-            return '⚠';
-        default:
-            return 'ℹ';
-    }
 } 

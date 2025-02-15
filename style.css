@@ -301,75 +301,109 @@ body {
 /* 设置面板 */
 .settings-panel {
     position: fixed;
-    top: 0;
-    right: -100%;
-    width: 100%;
-    max-width: 400px;
-    height: 100vh;
-    padding: 1.5rem;
+    top: 80px;
+    right: 20px;
     background: rgba(26, 27, 38, 0.98);
-    backdrop-filter: blur(10px);
-    border-left: 1px solid var(--card-border);
-    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px) scale(0.95);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .settings-panel.show {
-    right: 0;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
 }
 
-/* 标题区域 */
+/* 添加箭头指示器 */
+.settings-panel::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 20px;
+    width: 16px;
+    height: 16px;
+    background: rgba(26, 27, 38, 0.98);
+    transform: rotate(45deg);
+    border-left: 1px solid var(--card-border);
+    border-top: 1px solid var(--card-border);
+}
+
 .settings-panel h3 {
-    margin: 0 0 1rem 0;
+    color: var(--heading-color);
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
 }
 
-/* 标签页容器 */
-.settings-tabs {
-    margin-bottom: 1rem;
+.setting-item {
+    margin-bottom: 15px;
 }
 
-/* 标签页内容区域 */
-.tab-content {
-    display: none;
-    height: calc(100vh - 120px);
-    overflow-y: auto;
-    padding-right: 0.5rem;
-}
-
-.tab-content.active {
+.setting-item label {
     display: block;
+    margin-bottom: 5px;
+    color: var(--text-color);
 }
 
-/* 自定义滚动条 */
-.tab-content::-webkit-scrollbar {
-    width: 6px;
+.setting-item input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    background: rgba(41, 42, 58, 0.9);
+    color: var(--text-color);
+    margin-bottom: 5px;
 }
 
-.tab-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
+.setting-item input[type="range"] {
+    width: 100%;
+    margin: 10px 0;
 }
 
-.tab-content::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 3px;
+.setting-item button {
+    background: linear-gradient(45deg, #ff6b9d, #b48ead);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: opacity 0.3s;
 }
 
-.tab-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
+.setting-item button:hover {
+    opacity: 0.9;
 }
 
-/* 链接管理列表 */
-.links-list {
-    margin-bottom: 1rem;
+.share-btn {
+    width: 100%;
+    background: linear-gradient(45deg, #b48ead, #8fbcbb) !important;
+    margin-top: 10px;
 }
 
-/* 退出按钮固定在底部 */
-.setting-item:last-child {
-    margin-top: auto;
-    padding-top: 1rem;
+.share-btn:hover {
+    opacity: 0.9;
+}
+
+.button-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.button-group button {
+    flex: 1;
+}
+
+.default-btn {
+    background: linear-gradient(45deg, #8fbcbb, #88c0d0) !important;
 }
 
 /* 登录遮罩 */
@@ -451,74 +485,78 @@ body {
 }
 
 /* Toast通知 */
-.toast {
+#toastContainer {
     position: fixed;
-    top: 20px;
+    top: 16px;
     left: 50%;
-    transform: translateX(-50%) translateY(-100%);
-    min-width: 300px;
-    padding: 0;
-    background: rgba(26, 27, 38, 0.98);
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-    z-index: 10000;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: rgba(26, 27, 38, 0.95);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: auto;
+    border-left: 4px solid transparent;
 }
 
 .toast.show {
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(0);
+    opacity: 1;
 }
 
-.toast-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 20px;
-    color: var(--text-color);
+.toast.hide {
+    transform: translateY(-100%);
+    opacity: 0;
 }
 
 .toast-icon {
-    font-size: 1.2rem;
-    width: 24px;
-    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
 }
 
 .toast-message {
-    font-size: 0.95rem;
+    color: var(--text-color);
+    font-size: 0.9rem;
 }
 
-.toast-progress {
-    height: 3px;
-    background: linear-gradient(90deg, var(--progress-color) 0%, var(--progress-color) 100%);
-    width: 100%;
-    animation: progress 3s linear;
+.toast-close {
+    background: none;
+    border: none;
+    padding: 4px;
+    color: var(--text-color);
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity 0.2s;
 }
 
-@keyframes progress {
-    from { width: 100%; }
-    to { width: 0%; }
+.toast-close:hover {
+    opacity: 1;
 }
 
-.toast.success {
-    --progress-color: #a3be8c;
+.toast-success {
+    border-left-color: #43a047;
 }
 
-.toast.error {
-    --progress-color: #bf616a;
+.toast-error {
+    border-left-color: #e53935;
 }
 
-.toast.warning {
-    --progress-color: #ebcb8b;
-}
-
-.toast.info {
-    --progress-color: #88c0d0;
+.toast-info {
+    border-left-color: #1e88e5;
 }
 
 /* 动画优化 */
@@ -839,53 +877,4 @@ body {
 
 .fetch-info-btn:active {
     transform: translateY(1px);
-}
-
-/* 删除确认对话框样式 */
-.delete-icon {
-    color: #bf616a !important;
-    background: rgba(191, 97, 106, 0.1) !important;
-    padding: 8px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-}
-
-.delete-info {
-    text-align: left;
-    margin: 0 0 24px;
-}
-
-.delete-info p {
-    color: var(--text-color);
-    margin: 0 0 12px;
-    opacity: 0.8;
-}
-
-.link-preview {
-    background: rgba(41, 42, 58, 0.5);
-    border-radius: 8px;
-    padding: 12px;
-    border: 1px solid var(--card-border);
-}
-
-.link-name {
-    display: block;
-    color: #fff;
-    font-size: 1.1rem;
-    margin-bottom: 4px;
-}
-
-.link-url {
-    display: block;
-    color: var(--text-color);
-    font-size: 0.9rem;
-    opacity: 0.7;
-}
-
-.delete-confirm-btn {
-    background: linear-gradient(45deg, #bf616a, #d08770) !important;
-}
-
-.delete-confirm-btn:hover {
-    box-shadow: 0 4px 12px rgba(191, 97, 106, 0.3) !important;
 } 
