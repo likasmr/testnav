@@ -873,4 +873,53 @@ body {
 
 .fetch-info-btn:active {
     transform: translateY(1px);
+}
+
+/* 删除确认对话框样式 */
+.delete-icon {
+    color: #bf616a !important;
+    background: rgba(191, 97, 106, 0.1) !important;
+    padding: 8px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.delete-info {
+    text-align: left;
+    margin: 0 0 24px;
+}
+
+.delete-info p {
+    color: var(--text-color);
+    margin: 0 0 12px;
+    opacity: 0.8;
+}
+
+.link-preview {
+    background: rgba(41, 42, 58, 0.5);
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid var(--card-border);
+}
+
+.link-name {
+    display: block;
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.link-url {
+    display: block;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.delete-confirm-btn {
+    background: linear-gradient(45deg, #bf616a, #d08770) !important;
+}
+
+.delete-confirm-btn:hover {
+    box-shadow: 0 4px 12px rgba(191, 97, 106, 0.3) !important;
 } 

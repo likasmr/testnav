@@ -435,8 +435,64 @@ async function addLink() {
 }
 
 async function deleteLink(category, link) {
-    if (!confirm(`确定要删除 ${link.name} 吗？`)) return;
+    showDeleteConfirmDialog(category, link);
+}
+
+// 显示删除确认对话框
+function showDeleteConfirmDialog(category, link) {
+    const dialog = document.createElement('div');
+    dialog.className = 'confirm-dialog';
+    dialog.innerHTML = `
+        <div class="confirm-content">
+            <div class="confirm-icon delete-icon">
+                <svg viewBox="0 0 24 24" width="32" height="32">
+                    <path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                </svg>
+            </div>
+            <h3>删除链接</h3>
+            <div class="delete-info">
+                <p>确定要删除以下链接吗？</p>
+                <div class="link-preview">
+                    <span class="link-name">${link.name}</span>
+                    <span class="link-url">${link.url}</span>
+                </div>
+            </div>
+            <div class="confirm-buttons">
+                <button class="cancel-btn" onclick="hideDeleteConfirmDialog(this)">取消</button>
+                <button class="confirm-btn delete-confirm-btn" onclick="confirmDeleteLink(this, '${category}', ${JSON.stringify(link).replace(/"/g, '&quot;')})">
+                    删除
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(dialog);
     
+    // 添加点击背景关闭功能
+    dialog.addEventListener('click', (e) => {
+        if (e.target === dialog) {
+            hideDeleteConfirmDialog(dialog);
+        }
+    });
+
+    // 强制重排以触发动画
+    dialog.offsetHeight;
+    dialog.classList.add('show');
+}
+
+// 隐藏删除确认对话框
+function hideDeleteConfirmDialog(element) {
+    const dialog = element.closest('.confirm-dialog');
+    dialog.classList.add('hide');
+    dialog.classList.remove('show');
+    
+    setTimeout(() => {
+        dialog.remove();
+    }, 300);
+}
+
+// 确认删除链接
+async function confirmDeleteLink(element, category, link) {
     try {
         const response = await fetch('/api/manage-links', {
             method: 'POST',
@@ -453,9 +509,10 @@ async function deleteLink(category, link) {
         
         const data = await response.json();
         if (data.success) {
+            hideDeleteConfirmDialog(element);
             showToast('删除成功', 'success');
             loadLinks();
-            generateLinkGrid(); // 重新生成链接网格
+            generateLinkGrid();
         } else {
             throw new Error(data.message);
         }
