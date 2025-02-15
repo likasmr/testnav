@@ -767,32 +767,4 @@ function updateDragFeedback(event) {
         feedback.style.left = event.pageX + 10 + 'px';
         feedback.style.top = event.pageY + 10 + 'px';
     }
-}
-
-// 显示设置模态框
-function showSettings() {
-    document.getElementById('settingsModal').classList.add('show');
-}
-
-// 隐藏设置模态框
-function hideSettings() {
-    document.getElementById('settingsModal').classList.remove('show');
-}
-
-// 初始化标签页切换
-document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const tabId = this.dataset.tab;
-        document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById(tabId + 'Tab').classList.add('active');
-    });
-});
-
-// 点击模态框外部关闭
-document.getElementById('settingsModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        hideSettings();
-    }
-}); 
+} 
