@@ -324,29 +324,42 @@ function updateLinksList(links) {
     const container = document.getElementById('manageLinksList');
     container.innerHTML = '';
     
-    Object.entries(links).forEach(([category, items]) => {
+    for (const [category, items] of Object.entries(links)) {
         const categoryHTML = `
-            <div class="link-category">
-                <h4>${category}</h4>
-                ${items.map(item => `
-                    <div class="link-item-manage">
-                        <div class="link-info">
-                            <div>${item.name}</div>
-                            <div class="link-url">${item.url}</div>
+            <div class="category-section">
+                <h3>${category}</h3>
+                <div class="links-list" 
+                     data-category="${category}"
+                     ondragover="handleDragOver(event)"
+                     ondrop="handleDrop(event)">
+                    ${items.map(item => `
+                        <div class="link-item-manage"
+                             draggable="true"
+                             ondragstart="handleDragStart(event)"
+                             data-name="${item.name}"
+                             data-url="${item.url}"
+                             data-color="${item.color}">
+                            <div class="link-info">
+                                <div>${item.name}</div>
+                                <small>${item.url}</small>
+                            </div>
+                            <div class="link-actions">
+                                <button onclick="editLink('${category}', ${JSON.stringify(item).replace(/"/g, '&quot;')})">编辑</button>
+                                <button onclick="deleteLink('${category}', ${JSON.stringify(item).replace(/"/g, '&quot;')})">删除</button>
+                            </div>
                         </div>
-                        <div class="link-actions">
-                            <button class="edit-btn" onclick="editLink('${category}', ${JSON.stringify(item).replace(/"/g, '&quot;')})">
-                                ✏️
-                            </button>
-                            <button class="delete-btn" onclick="deleteLink('${category}', ${JSON.stringify(item).replace(/"/g, '&quot;')})">
-                                🗑️
-                            </button>
-                        </div>
-                    </div>
-                `).join('')}
+                    `).join('')}
+                </div>
             </div>
         `;
         container.insertAdjacentHTML('beforeend', categoryHTML);
+    }
+
+    // 添加拖拽事件监听
+    const linkItems = document.querySelectorAll('.link-item-manage');
+    linkItems.forEach(item => {
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragend', handleDragEnd);
     });
 }
 
@@ -639,5 +652,119 @@ async function fetchSiteInfo() {
         showToast('获取网站信息成功', 'success');
     } catch (error) {
         showToast('获取网站信息失败: ' + error.message, 'error');
+    }
+}
+
+// 拖拽开始
+function handleDragStart(event) {
+    const item = event.target.closest('.link-item-manage');
+    item.classList.add('dragging');
+    
+    // 存储被拖拽的链接数据
+    event.dataTransfer.setData('application/json', JSON.stringify({
+        name: item.dataset.name,
+        url: item.dataset.url,
+        color: item.dataset.color,
+        sourceCategory: item.closest('.links-list').dataset.category
+    }));
+    
+    // 创建拖拽反馈
+    const feedback = document.createElement('div');
+    feedback.className = 'drag-feedback';
+    feedback.textContent = `移动: ${item.dataset.name}`;
+    document.body.appendChild(feedback);
+    
+    // 更新拖拽反馈位置
+    document.addEventListener('dragover', updateDragFeedback);
+}
+
+// 拖拽结束
+function handleDragEnd(event) {
+    event.target.classList.remove('dragging');
+    document.removeEventListener('dragover', updateDragFeedback);
+    const feedback = document.querySelector('.drag-feedback');
+    if (feedback) {
+        feedback.remove();
+    }
+}
+
+// 拖拽经过
+function handleDragOver(event) {
+    event.preventDefault();
+    const dropZone = event.target.closest('.links-list');
+    if (dropZone) {
+        document.querySelectorAll('.links-list').forEach(list => {
+            list.classList.remove('drag-over');
+        });
+        dropZone.classList.add('drag-over');
+    }
+}
+
+// 放置处理
+async function handleDrop(event) {
+    event.preventDefault();
+    const dropZone = event.target.closest('.links-list');
+    document.querySelectorAll('.links-list').forEach(list => {
+        list.classList.remove('drag-over');
+    });
+    
+    if (!dropZone) return;
+    
+    try {
+        const data = JSON.parse(event.dataTransfer.getData('application/json'));
+        const targetCategory = dropZone.dataset.category;
+        
+        if (data.sourceCategory === targetCategory) return;
+        
+        // 从原分类删除
+        await fetch('/api/manage-links', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+                action: 'remove',
+                category: data.sourceCategory,
+                link: {
+                    url: data.url
+                }
+            })
+        });
+        
+        // 添加到新分类
+        await fetch('/api/manage-links', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+                action: 'add',
+                category: targetCategory,
+                link: {
+                    name: data.name,
+                    url: data.url,
+                    color: data.color
+                }
+            })
+        });
+        
+        // 刷新显示
+        loadLinks();
+        generateLinkGrid();
+        showToast('链接已移动到新分类', 'success');
+    } catch (error) {
+        showToast('移动链接失败', 'error');
+    }
+}
+
+// 更新拖拽反馈位置
+function updateDragFeedback(event) {
+    const feedback = document.querySelector('.drag-feedback');
+    if (feedback) {
+        feedback.style.display = 'block';
+        feedback.style.left = event.pageX + 10 + 'px';
+        feedback.style.top = event.pageY + 10 + 'px';
     }
 } 
