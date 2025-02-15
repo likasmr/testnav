@@ -29,36 +29,26 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 1rem;
     position: relative;
     z-index: 1;
 }
 
 .banner {
-    text-align: center;
-    padding: 1rem 2rem;
-    background: rgba(26, 27, 38, 0.85);
-    border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--card-border);
-    margin-bottom: 2rem;
+    margin: 1rem 0 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
 }
 
 .banner h1 {
-    font-size: 2.8rem;
+    font-size: 2rem;
     background-image: linear-gradient(45deg, #ff6b9d, #b48ead);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin: 0;
-    font-weight: 700;
-    letter-spacing: 2px;
-    position: relative;
-    display: inline-block;
+    font-weight: 600;
 }
 
 .category-grid {
@@ -72,14 +62,11 @@ body {
 .search-box button {
     background: linear-gradient(45deg, #ff6b9d, #b48ead);
     border: none;
-    border-radius: 25px;
-    padding: 12px 25px;
+    border-radius: 8px;
+    padding: 12px 20px;
     color: white;
-    font-weight: bold;
     font-size: 1rem;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-    box-shadow: 0 5px 20px rgba(245,0,87,0.3);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s;
 }
 
 .search-box button:hover {
@@ -91,13 +78,11 @@ body {
 .search-box input {
     flex: 1;
     border: none;
-    border-radius: 25px;
+    border-radius: 8px;
     padding: 12px 20px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     background: rgba(41, 42, 58, 0.9);
     color: var(--text-color);
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
-    transition: all 0.3s;
 }
 
 .search-box input:focus {
@@ -109,9 +94,9 @@ body {
 /* 分类卡片立体化 */
 .category-card {
     background: rgba(26, 27, 38, 0.95);
-    border-radius: 20px;
+    border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
     border: 1px solid var(--card-border);
     transition: transform 0.3s;
@@ -131,7 +116,7 @@ body {
 
 .category-card h2 {
     color: var(--heading-color);
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid var(--card-border);
@@ -149,7 +134,7 @@ body {
     align-items: center;
     padding: 12px 20px;
     margin: 8px 0;
-    border-radius: 15px;
+    border-radius: 8px;
     background: rgba(41, 42, 58, 0.7);
     transition: all 0.3s;
     position: relative;
@@ -171,7 +156,7 @@ body {
 }
 
 .link-item:hover {
-    transform: translateX(10px);
+    transform: translateX(5px);
     box-shadow: 0 5px 15px rgba(var(--hover-color), 0.15);
     background: rgba(41, 42, 58, 0.9);
     color: var(--heading-color);
@@ -183,8 +168,8 @@ body {
 
 /* 页脚美化 */
 .waifu-footer {
-    background: linear-gradient(90deg, rgba(255,107,157,0.2), rgba(180,142,173,0.2));
-    border-radius: 15px;
+    background: rgba(26, 27, 38, 0.95);
+    border-radius: 8px;
     padding: 1rem;
     margin-top: 2rem;
     color: var(--text-color);
