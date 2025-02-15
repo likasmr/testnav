@@ -529,27 +529,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 设置面板交互
     const settingsBtn = document.querySelector('.settings-btn');
-    const settingsPanel = document.getElementById('settingsPanel');
+    const quickSettings = document.getElementById('quickSettings');
     let timeoutId;
 
     // 鼠标进入按钮或面板时显示
     function showPanel() {
         clearTimeout(timeoutId);
-        settingsPanel.classList.add('show');
+        quickSettings.classList.add('show');
     }
 
     // 鼠标离开按钮和面板时延迟隐藏
     function hidePanel() {
         timeoutId = setTimeout(() => {
-            settingsPanel.classList.remove('show');
+            quickSettings.classList.remove('show');
         }, 300); // 300ms延迟，避免鼠标移动到面板时闪烁
     }
 
     // 绑定事件
     settingsBtn.addEventListener('mouseenter', showPanel);
     settingsBtn.addEventListener('mouseleave', hidePanel);
-    settingsPanel.addEventListener('mouseenter', showPanel);
-    settingsPanel.addEventListener('mouseleave', hidePanel);
+    quickSettings.addEventListener('mouseenter', showPanel);
+    quickSettings.addEventListener('mouseleave', hidePanel);
 
     // 初始化标签页切换
     const tabs = document.querySelectorAll('.tab-btn');
@@ -769,65 +769,55 @@ function updateDragFeedback(event) {
     }
 }
 
-// 设置菜单控制
-function toggleSettingsMenu() {
-    const menu = document.getElementById('settingsMenu');
-    menu.classList.toggle('show');
+// 显示/隐藏快捷设置
+function toggleQuickSettings() {
+    const settings = document.getElementById('quickSettings');
+    settings.classList.toggle('show');
 }
 
-// 点击其他地方关闭菜单
-document.addEventListener('click', (e) => {
-    const menu = document.getElementById('settingsMenu');
-    const btn = document.querySelector('.settings-btn');
-    if (!menu.contains(e.target) && !btn.contains(e.target)) {
-        menu.classList.remove('show');
+// 背景设置
+function showBackgroundSettings() {
+    const modal = document.getElementById('backgroundModal');
+    modal.style.display = 'flex';
+    // 预加载当前背景
+    const currentBg = localStorage.getItem('bgImage');
+    if (currentBg) {
+        document.getElementById('bgImageUrl').value = currentBg;
+        document.getElementById('bgPreview').style.backgroundImage = `url(${currentBg})`;
     }
-});
-
-// 背景设置弹窗
-function showBgSettings() {
-    const modal = document.getElementById('bgSettingsModal');
-    modal.classList.add('show');
-    // 关闭设置菜单
-    document.getElementById('settingsMenu').classList.remove('show');
 }
 
-function hideBgSettings() {
-    const modal = document.getElementById('bgSettingsModal');
-    modal.classList.remove('show');
+function hideBackgroundSettings() {
+    document.getElementById('backgroundModal').style.display = 'none';
 }
 
-// 链接管理界面
+// 链接管理
 function showLinkManager() {
-    // 跳转到独立的链接管理页面
-    window.location.href = '/links.html';
+    const manager = document.getElementById('linkManager');
+    manager.classList.add('show');
+    loadLinks(); // 加载现有链接
 }
 
-// 显示设置面板
-function showPanel(type) {
-    const panel = document.getElementById(`${type}Panel`);
-    panel.classList.add('show');
-    // 关闭设置菜单
-    document.getElementById('settingsMenu').classList.remove('show');
+function hideLinkManager() {
+    const manager = document.getElementById('linkManager');
+    manager.classList.remove('show');
 }
 
-// 隐藏设置面板
-function hidePanel(type) {
-    const panel = document.getElementById(`${type}Panel`);
-    panel.classList.remove('show');
-    // 显示设置菜单
-    document.getElementById('settingsMenu').classList.add('show');
-}
-
-// 点击外部关闭面板
-document.addEventListener('click', (e) => {
-    const menu = document.getElementById('settingsMenu');
-    const btn = document.querySelector('.settings-btn');
-    const panels = document.querySelectorAll('.settings-panel');
+// 事件监听
+document.addEventListener('DOMContentLoaded', () => {
+    const settingsBtn = document.querySelector('.settings-btn');
+    const quickSettings = document.getElementById('quickSettings');
     
-    if (!menu.contains(e.target) && !btn.contains(e.target) && 
-        !Array.from(panels).some(panel => panel.contains(e.target))) {
-        menu.classList.remove('show');
-        panels.forEach(panel => panel.classList.remove('show'));
-    }
+    // 点击设置按钮显示快捷设置
+    settingsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleQuickSettings();
+    });
+    
+    // 点击其他区域关闭快捷设置
+    document.addEventListener('click', (e) => {
+        if (!quickSettings.contains(e.target) && !settingsBtn.contains(e.target)) {
+            quickSettings.classList.remove('show');
+        }
+    });
 }); 
