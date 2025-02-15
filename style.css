@@ -58,18 +58,28 @@ body {
     margin: 2rem 0;
 }
 
-/* 搜索框样式 */
-.search-container {
-    background: rgba(26, 27, 38, 0.95);
-    padding: 1rem;
+/* 按钮美化 */
+.search-box button {
+    background: linear-gradient(45deg, #ff6b9d, #b48ead);
+    border: none;
     border-radius: 8px;
-    margin-bottom: 2rem;
+    padding: 12px 20px;
+    color: white;
+    font-size: 1rem;
+    transition: transform 0.2s;
 }
 
+.search-box button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255,107,157,0.4);
+}
+
+/* 搜索框优化 */
 .search-box {
-    width: 100%;
-    display: flex;
-    gap: 10px;
+    background: rgba(41, 42, 58, 0.7);
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 2rem;
 }
 
 .search-box input {
@@ -78,7 +88,7 @@ body {
     border-radius: 8px;
     padding: 12px 20px;
     font-size: 1rem;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     color: var(--text-color);
 }
 
@@ -92,7 +102,7 @@ body {
 .category-card {
     background: rgba(26, 27, 38, 0.95);
     border-radius: 12px;
-    padding: 0;
+    padding: 1.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
     border: 1px solid var(--card-border);
@@ -101,12 +111,22 @@ body {
     overflow: hidden;
 }
 
+.category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #ff6b9d, #b48ead);
+}
+
 .category-card h2 {
     color: var(--heading-color);
     font-size: 1.4rem;
-    margin: 0;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--card-border);
     text-shadow: 2px 2px 4px rgba(255,51,119,0.1);
 }
 
@@ -118,17 +138,15 @@ body {
 /* 链接项动画效果 */
 .link-item {
     display: flex;
-    align-items: center;
-    padding: 12px 20px;
+    align-items: flex-start;
+    padding: 16px;
     margin: 8px 0;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(41, 42, 58, 0.5);
     transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
     text-decoration: none;
-    color: var(--link-color);
-    font-weight: 500;
+    color: var(--text-color);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .link-item::before {
@@ -143,10 +161,9 @@ body {
 }
 
 .link-item:hover {
-    transform: translateX(5px);
-    box-shadow: 0 5px 15px rgba(var(--hover-color), 0.15);
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--heading-color);
+    transform: translateY(-2px);
+    background: rgba(41, 42, 58, 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .link-item:hover::before {
@@ -938,26 +955,63 @@ body {
     padding-top: 1rem;
 }
 
-/* 分类标签样式 */
+/* 分类标签 */
 .category-tags {
     display: flex;
-    gap: 0.5rem;
-    padding: 1rem;
-    border-bottom: 1px solid var(--card-border);
+    gap: 8px;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    padding: 4px;
 }
 
 .category-tag {
-    padding: 0.5rem 1rem;
+    padding: 6px 16px;
     border-radius: 6px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(41, 42, 58, 0.7);
     color: var(--text-color);
-    font-size: 0.9rem;
     cursor: pointer;
+    white-space: nowrap;
     transition: all 0.3s;
 }
 
-.category-tag:hover,
 .category-tag.active {
     background: var(--main-color);
-    color: white;
+    color: #fff;
+}
+
+/* 分类标题 */
+.category-title {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    opacity: 0.8;
+    font-weight: normal;
+}
+
+.link-item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin-right: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.link-item-content {
+    flex: 1;
+}
+
+.link-item-title {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.link-item-desc {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    opacity: 0.7;
 } 
