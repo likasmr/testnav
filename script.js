@@ -529,27 +529,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 设置面板交互
     const settingsBtn = document.querySelector('.settings-btn');
-    const quickSettings = document.getElementById('quickSettings');
+    const settingsPanel = document.getElementById('settingsPanel');
     let timeoutId;
 
     // 鼠标进入按钮或面板时显示
     function showPanel() {
         clearTimeout(timeoutId);
-        quickSettings.classList.add('show');
+        settingsPanel.classList.add('show');
     }
 
     // 鼠标离开按钮和面板时延迟隐藏
     function hidePanel() {
         timeoutId = setTimeout(() => {
-            quickSettings.classList.remove('show');
+            settingsPanel.classList.remove('show');
         }, 300); // 300ms延迟，避免鼠标移动到面板时闪烁
     }
 
     // 绑定事件
     settingsBtn.addEventListener('mouseenter', showPanel);
     settingsBtn.addEventListener('mouseleave', hidePanel);
-    quickSettings.addEventListener('mouseenter', showPanel);
-    quickSettings.addEventListener('mouseleave', hidePanel);
+    settingsPanel.addEventListener('mouseenter', showPanel);
+    settingsPanel.addEventListener('mouseleave', hidePanel);
 
     // 初始化标签页切换
     const tabs = document.querySelectorAll('.tab-btn');
@@ -769,55 +769,54 @@ function updateDragFeedback(event) {
     }
 }
 
-// 显示/隐藏快捷设置
-function toggleQuickSettings() {
-    const settings = document.getElementById('quickSettings');
-    settings.classList.toggle('show');
+// 设置按钮交互
+document.querySelector('.settings-btn').addEventListener('mouseenter', () => {
+    document.getElementById('quickSettings').classList.add('show');
+});
+
+document.getElementById('quickSettings').addEventListener('mouseleave', () => {
+    document.getElementById('quickSettings').classList.remove('show');
+});
+
+// 背景设置对话框
+function showBackgroundDialog() {
+    const dialog = document.getElementById('backgroundDialog');
+    dialog.classList.add('show');
+    
+    // 加载当前设置
+    const currentBg = localStorage.getItem('bgImage');
+    const currentBlur = localStorage.getItem('bgBlur') || 5;
+    
+    document.getElementById('bgImageUrl').value = currentBg || '';
+    document.getElementById('bgBlur').value = currentBlur;
+    document.getElementById('blurValue').textContent = currentBlur + 'px';
+    
+    // 更新预览
+    updateBgPreview();
 }
 
-// 背景设置
-function showBackgroundSettings() {
-    const modal = document.getElementById('backgroundModal');
-    modal.style.display = 'flex';
-    // 预加载当前背景
-    const currentBg = localStorage.getItem('bgImage');
-    if (currentBg) {
-        document.getElementById('bgImageUrl').value = currentBg;
-        document.getElementById('bgPreview').style.backgroundImage = `url(${currentBg})`;
+function hideBackgroundDialog() {
+    document.getElementById('backgroundDialog').classList.remove('show');
+}
+
+function updateBgPreview() {
+    const url = document.getElementById('bgImageUrl').value;
+    const preview = document.getElementById('bgPreview');
+    
+    if (url) {
+        preview.style.backgroundImage = `url(${url})`;
+        preview.style.display = 'block';
+    } else {
+        preview.style.display = 'none';
     }
 }
 
-function hideBackgroundSettings() {
-    document.getElementById('backgroundModal').style.display = 'none';
-}
-
-// 链接管理
+// 链接管理器
 function showLinkManager() {
-    const manager = document.getElementById('linkManager');
-    manager.classList.add('show');
-    loadLinks(); // 加载现有链接
+    document.getElementById('linkManager').classList.add('show');
+    loadLinks(); // 加载链接列表
 }
 
 function hideLinkManager() {
-    const manager = document.getElementById('linkManager');
-    manager.classList.remove('show');
-}
-
-// 事件监听
-document.addEventListener('DOMContentLoaded', () => {
-    const settingsBtn = document.querySelector('.settings-btn');
-    const quickSettings = document.getElementById('quickSettings');
-    
-    // 点击设置按钮显示快捷设置
-    settingsBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleQuickSettings();
-    });
-    
-    // 点击其他区域关闭快捷设置
-    document.addEventListener('click', (e) => {
-        if (!quickSettings.contains(e.target) && !settingsBtn.contains(e.target)) {
-            quickSettings.classList.remove('show');
-        }
-    });
-}); 
+    document.getElementById('linkManager').classList.remove('show');
+} 
