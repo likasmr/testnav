@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>链接管理 - AnimeHome</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="banner">
+            <h1>链接管理</h1>
+            <button onclick="window.location.href='/'" class="back-btn">返回首页</button>
+        </header>
+        
+        <div class="management-panel">
+            <div class="management-tabs">
+                <button class="tab-btn active" data-tab="links">链接管理</button>
+                <button class="tab-btn" data-tab="settings">系统设置</button>
+            </div>
+            
+            <!-- 链接管理内容 -->
+            <div class="tab-content active" id="linksTab">
+                <div class="setting-item">
+                    <button onclick="resetToDefaultLinks()" class="reset-btn">
+                        🔄 恢复默认链接
+                    </button>
+                </div>
+                <div class="setting-item">
+                    <label>添加新链接：</label>
+                    <select id="linkCategory">
+                        <option value="">选择分类...</option>
+                        <option value="new">新建分类</option>
+                    </select>
+                    <input type="text" id="newCategory" placeholder="新分类名称" style="display: none;">
+                    <input type="text" id="linkUrl" placeholder="网站链接">
+                    <button onclick="fetchSiteInfo()" class="fetch-info-btn">获取信息</button>
+                    <div class="site-info" id="siteInfo" style="display: none;">
+                        <div class="site-preview">
+                            <img id="siteIcon" src="" alt="" class="site-icon">
+                            <div class="site-details">
+                                <input type="text" id="linkName" placeholder="网站名称">
+                                <textarea id="linkDescription" placeholder="网站描述" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="color" id="linkColor" value="#ff6b9d">
+                    <button onclick="addLink()" class="add-btn">添加链接</button>
+                </div>
+                <div class="links-list" id="manageLinksList"></div>
+            </div>
+            
+            <!-- 系统设置内容 -->
+            <div class="tab-content" id="settingsTab">
+                <div class="setting-item">
+                    <label>背景图片URL：</label>
+                    <input type="text" id="bgImageUrl" placeholder="输入图片链接...">
+                    <div class="button-group">
+                        <button onclick="updateBackground()">应用</button>
+                        <button onclick="setAsDefault()" class="default-btn">设为默认</button>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <label>背景模糊度：</label>
+                    <input type="range" id="bgBlur" min="0" max="20" value="5" step="1">
+                    <span id="blurValue">5px</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="config.js"></script>
+    <script src="toast.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

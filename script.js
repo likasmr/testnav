@@ -490,6 +490,21 @@ async function importDefaultLinks() {
     }
 }
 
+// 在设置面板添加管理入口
+function addManagementEntry() {
+    const settingsPanel = document.getElementById('settingsPanel');
+    if (!settingsPanel) return;
+    
+    const managementEntry = document.createElement('div');
+    managementEntry.className = 'setting-item';
+    managementEntry.innerHTML = `
+        <button onclick="window.location.href='/manage.html'" class="management-btn">
+            🛠️ 进入管理界面
+        </button>
+    `;
+    settingsPanel.insertBefore(managementEntry, settingsPanel.firstChild);
+}
+
 // 初始化
 document.addEventListener('DOMContentLoaded', async () => {
     checkAuth();
@@ -575,6 +590,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('newCategory').style.display = 
             this.value === 'new' ? 'block' : 'none';
     });
+
+    addManagementEntry();
 });
 
 async function resetToDefaultLinks() {
