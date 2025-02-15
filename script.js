@@ -303,18 +303,11 @@ async function loadLinks() {
         const response = await fetch('/api/manage-links');
         const data = await response.json();
         
-        if (data.links) {
-            // 更新分类下拉框
-            const categorySelect = document.getElementById('linkCategory');
-            categorySelect.innerHTML = '<option value="">选择分类...</option><option value="new">新建分类</option>';
-            
-            Object.keys(data.links).forEach(category => {
-                categorySelect.innerHTML += `<option value="${category}">${category}</option>`;
-            });
-            
-            // 更新链接列表
-            updateLinksList(data.links);
-        }
+        // 保存获取到的链接数据
+        links = data.links || {};
+        
+        // 更新链接管理界面
+        updateLinksManagement();
     } catch (error) {
         showToast('加载链接失败', 'error');
     }
