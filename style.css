@@ -880,36 +880,97 @@ body {
 }
 
 /* 管理页面样式 */
-.management-panel {
-    background: rgba(26, 27, 38, 0.95);
-    border-radius: 12px;
+.manage-container {
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 2rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--card-border);
 }
 
-.management-tabs {
+.manage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--card-border);
+}
+
+.manage-header h1 {
+    font-size: 2rem;
+    background-image: linear-gradient(45deg, #ff6b9d, #b48ead);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+
+.header-actions {
     display: flex;
     gap: 1rem;
-    margin-bottom: 2rem;
 }
 
 .back-btn {
     background: linear-gradient(45deg, #8fbcbb, #88c0d0);
-    padding: 12px 24px;
+    border: none;
     border-radius: 8px;
+    padding: 12px 24px;
     color: white;
-    text-decoration: none;
-    transition: transform 0.2s;
+    cursor: pointer;
+    transition: all 0.3s;
 }
 
-.back-btn:hover {
-    transform: translateY(-2px);
+.manage-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
 }
 
-/* 管理页面的链接列表 */
-.management-panel .links-list {
-    max-height: 60vh;
-    overflow-y: auto;
-    padding-right: 1rem;
+.add-link-section {
+    background: rgba(26, 27, 38, 0.95);
+    border-radius: 12px;
+    padding: 1.5rem;
+    height: fit-content;
+}
+
+.add-link-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.manage-links-section {
+    background: rgba(26, 27, 38, 0.95);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.category-section {
+    background: rgba(41, 42, 58, 0.7);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.category-section h3 {
+    color: var(--heading-color);
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--card-border);
+}
+
+@media (max-width: 768px) {
+    .manage-content {
+        grid-template-columns: 1fr;
+    }
 } 
