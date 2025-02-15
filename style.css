@@ -265,145 +265,153 @@ body {
     transition: filter 0.3s ease;
 }
 
-/* 设置按钮 */
-.settings-btn {
+/* 设置按钮和快捷菜单 */
+.settings-wrapper {
     position: fixed;
     top: 20px;
     right: 20px;
-    width: 45px;
-    height: 45px;
+    z-index: 1000;
+}
+
+.settings-btn {
     background: rgba(26, 27, 38, 0.95);
-    border-radius: 12px;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 1000;
-    border: 1px solid var(--card-border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--text-color);
+    transition: all 0.3s;
 }
 
 .settings-btn:hover {
+    background: rgba(41, 42, 58, 0.95);
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.settings-btn span {
-    font-size: 1.5rem;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.settings-btn:hover span {
-    transform: rotate(180deg);
-}
-
-/* 设置面板 */
-.settings-panel {
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    background: rgba(26, 27, 38, 0.98);
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--card-border);
-    z-index: 999;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-20px) scale(0.95);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.settings-panel.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0) scale(1);
-}
-
-/* 添加箭头指示器 */
-.settings-panel::before {
-    content: '';
+.quick-settings {
     position: absolute;
-    top: -8px;
-    right: 20px;
-    width: 16px;
-    height: 16px;
-    background: rgba(26, 27, 38, 0.98);
-    transform: rotate(45deg);
-    border-left: 1px solid var(--card-border);
-    border-top: 1px solid var(--card-border);
-}
-
-.settings-panel h3 {
-    color: var(--heading-color);
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.2rem;
-}
-
-.setting-item {
-    margin-bottom: 15px;
-}
-
-.setting-item label {
-    display: block;
-    margin-bottom: 5px;
-    color: var(--text-color);
-}
-
-.setting-item input[type="text"] {
-    width: 100%;
-    padding: 8px;
+    top: 50px;
+    right: 0;
+    background: rgba(26, 27, 38, 0.95);
+    border-radius: 12px;
+    width: 200px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     border: 1px solid var(--card-border);
-    border-radius: 8px;
-    background: rgba(41, 42, 58, 0.9);
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: all 0.3s;
+}
+
+.settings-wrapper:hover .quick-settings {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.quick-settings-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.quick-settings-header h3 {
+    margin: 0;
+    font-size: 1rem;
     color: var(--text-color);
-    margin-bottom: 5px;
 }
 
-.setting-item input[type="range"] {
+.quick-settings-content {
+    padding: 8px;
+}
+
+.quick-setting-item {
     width: 100%;
-    margin: 10px 0;
-}
-
-.setting-item button {
-    background: linear-gradient(45deg, #ff6b9d, #b48ead);
+    padding: 10px 16px;
     border: none;
-    padding: 8px 15px;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    transition: opacity 0.3s;
-}
-
-.setting-item button:hover {
-    opacity: 0.9;
-}
-
-.share-btn {
-    width: 100%;
-    background: linear-gradient(45deg, #b48ead, #8fbcbb) !important;
-    margin-top: 10px;
-}
-
-.share-btn:hover {
-    opacity: 0.9;
-}
-
-.button-group {
+    background: none;
+    color: var(--text-color);
     display: flex;
-    gap: 8px;
-    margin-top: 8px;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
 }
 
-.button-group button {
-    flex: 1;
+.quick-setting-item:hover {
+    background: rgba(41, 42, 58, 0.9);
 }
 
-.default-btn {
-    background: linear-gradient(45deg, #8fbcbb, #88c0d0) !important;
+/* 模态框样式 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: rgba(26, 27, 38, 0.95);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    border: 1px solid var(--card-border);
+}
+
+.modal-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    padding: 16px;
+    border-top: 1px solid var(--card-border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.setting-group {
+    margin-bottom: 20px;
+}
+
+.setting-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color);
+}
+
+.preview-box {
+    margin-top: 12px;
+    height: 120px;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid var(--card-border);
+}
+
+.slider-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 /* 登录遮罩 */

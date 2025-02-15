@@ -767,4 +767,41 @@ function updateDragFeedback(event) {
         feedback.style.left = event.pageX + 10 + 'px';
         feedback.style.top = event.pageY + 10 + 'px';
     }
-} 
+}
+
+// 显示背景设置
+function showBackgroundSettings() {
+    const modal = document.getElementById('backgroundModal');
+    modal.style.display = 'flex';
+    
+    // 显示当前背景预览
+    const preview = document.getElementById('bgPreview');
+    const currentBg = localStorage.getItem('bgImage');
+    if (currentBg) {
+        preview.style.backgroundImage = `url(${currentBg})`;
+    }
+}
+
+// 隐藏背景设置
+function hideBackgroundSettings() {
+    const modal = document.getElementById('backgroundModal');
+    modal.style.display = 'none';
+}
+
+// 保存背景设置
+function saveBackgroundSettings() {
+    updateBackground();
+    hideBackgroundSettings();
+    showToast('背景设置已保存', 'success');
+}
+
+// 显示链接管理器
+function showLinkManager() {
+    window.location.href = '/manage.html';
+}
+
+// 实时预览背景
+document.getElementById('bgImageUrl').addEventListener('input', function() {
+    const preview = document.getElementById('bgPreview');
+    preview.style.backgroundImage = `url(${this.value})`;
+}); 
