@@ -769,39 +769,36 @@ function updateDragFeedback(event) {
     }
 }
 
-// 显示背景设置
-function showBackgroundSettings() {
-    const modal = document.getElementById('backgroundModal');
-    modal.style.display = 'flex';
-    
-    // 显示当前背景预览
-    const preview = document.getElementById('bgPreview');
-    const currentBg = localStorage.getItem('bgImage');
-    if (currentBg) {
-        preview.style.backgroundImage = `url(${currentBg})`;
+// 设置菜单控制
+function toggleSettingsMenu() {
+    const menu = document.getElementById('settingsMenu');
+    menu.classList.toggle('show');
+}
+
+// 点击其他地方关闭菜单
+document.addEventListener('click', (e) => {
+    const menu = document.getElementById('settingsMenu');
+    const btn = document.querySelector('.settings-btn');
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.classList.remove('show');
     }
+});
+
+// 背景设置弹窗
+function showBgSettings() {
+    const modal = document.getElementById('bgSettingsModal');
+    modal.classList.add('show');
+    // 关闭设置菜单
+    document.getElementById('settingsMenu').classList.remove('show');
 }
 
-// 隐藏背景设置
-function hideBackgroundSettings() {
-    const modal = document.getElementById('backgroundModal');
-    modal.style.display = 'none';
+function hideBgSettings() {
+    const modal = document.getElementById('bgSettingsModal');
+    modal.classList.remove('show');
 }
 
-// 保存背景设置
-function saveBackgroundSettings() {
-    updateBackground();
-    hideBackgroundSettings();
-    showToast('背景设置已保存', 'success');
-}
-
-// 显示链接管理器
+// 链接管理界面
 function showLinkManager() {
-    window.location.href = '/manage.html';
-}
-
-// 实时预览背景
-document.getElementById('bgImageUrl').addEventListener('input', function() {
-    const preview = document.getElementById('bgPreview');
-    preview.style.backgroundImage = `url(${this.value})`;
-}); 
+    // 跳转到独立的链接管理页面
+    window.location.href = '/links.html';
+} 
