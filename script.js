@@ -769,22 +769,38 @@ function updateDragFeedback(event) {
     }
 }
 
-// 设置按钮点击事件
-document.querySelector('.settings-btn').addEventListener('click', () => {
-    showModal('bgSettingsModal');
-});
-
-// 显示弹窗
-function showModal(id) {
-    document.getElementById(id).classList.add('show');
+// 显示设置面板
+function showSettings() {
+    document.getElementById('settingsPanel').classList.add('show');
 }
 
-// 关闭弹窗
-function closeModal(id) {
-    document.getElementById(id).classList.remove('show');
+// 隐藏设置面板
+function hideSettings() {
+    document.getElementById('settingsPanel').classList.remove('show');
 }
 
-// 链接管理独立页面
-function openLinkManager() {
-    window.open('/manage-links.html', '_blank');
+// 跳转到链接管理
+function gotoLinkManagement() {
+    window.location.href = '/manage-links.html';
+}
+
+// 在管理页面初始化
+if (window.location.pathname.includes('manage-links')) {
+    // 需要登录验证
+    checkAuth().then(() => {
+        loadCategories();
+        loadLinks();
+    });
+}
+
+async function loadCategories() {
+    const response = await fetch('/api/manage-links');
+    const data = await response.json();
+    const container = document.getElementById('categoryList');
+    
+    container.innerHTML = Object.keys(data.links).map(category => `
+        <div class="category-item" onclick="loadCategory('${category}')">
+            ${category} (${data.links[category].length})
+        </div>
+    `).join('');
 } 

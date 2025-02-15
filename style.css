@@ -271,25 +271,25 @@ body {
     bottom: 24px;
     right: 24px;
     background: linear-gradient(45deg, #ff6b9d, #b48ead);
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
     cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 6px 20px rgba(255,107,157,0.3);
-    z-index: 1000;
-}
-
-.settings-btn:hover {
-    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 8px 24px rgba(255,107,157,0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
 }
 
 .settings-btn span {
-    font-size: 24px;
-    color: white;
+    font-size: 28px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.settings-btn:hover {
+    transform: translateY(-4px) rotate(45deg);
+    box-shadow: 0 12px 32px rgba(255,107,157,0.4);
 }
 
 /* 设置面板 */
@@ -873,62 +873,86 @@ body {
     transform: translateY(1px);
 }
 
-/* 设置弹窗 */
-.settings-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(8px);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-}
-
-.settings-modal.show {
-    display: flex;
-}
-
-.modal-content {
+/* 管理页面样式 */
+.manage-header {
+    padding: 1rem 2rem;
     background: rgba(26, 27, 38, 0.95);
-    border-radius: 16px;
-    padding: 24px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--card-border);
-}
-
-.modal-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    gap: 1rem;
+    border-bottom: 1px solid var(--card-border);
 }
 
-.modal-header h3 {
-    margin: 0;
-    color: var(--heading-color);
-}
-
-.close-btn {
-    background: none;
-    border: none;
-    padding: 4px;
+.back-btn {
     color: var(--text-color);
-    cursor: pointer;
-    transition: opacity 0.2s;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.3s;
 }
 
-.close-btn:hover {
-    opacity: 0.8;
+.back-btn:hover {
+    background: rgba(255,255,255,0.1);
 }
 
-.modal-body {
+.manage-container {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: calc(100vh - 60px);
+}
+
+.manage-sidebar {
+    background: rgba(26, 27, 38, 0.9);
+    padding: 1rem;
+    border-right: 1px solid var(--card-border);
+}
+
+.manage-main {
+    padding: 2rem;
+}
+
+/* 分类列表 */
+.category-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
+}
+
+.category-item {
+    padding: 12px;
+    background: rgba(41, 42, 58, 0.7);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.category-item:hover {
+    background: rgba(41, 42, 58, 0.9);
+}
+
+.add-category-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 12px;
+    background: linear-gradient(45deg, #8fbcbb, #88c0d0);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+/* 操作按钮 */
+.operation-btn {
+    padding: 12px 24px;
+    margin-right: 8px;
+    background: rgba(41, 42, 58, 0.7);
+    border: none;
+    border-radius: 8px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.operation-btn:hover {
+    background: rgba(41, 42, 58, 0.9);
 } 
