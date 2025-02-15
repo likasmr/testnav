@@ -116,53 +116,18 @@
         </div>
     </div>
     
-    <!-- 添加链接浮动按钮 -->
-    <button class="add-link-btn" onclick="showAddLinkModal()">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-            <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-        </svg>
-    </button>
-    
-    <!-- 添加链接模态框 -->
-    <div class="add-link-modal" id="addLinkModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>添加新链接</h3>
-                <button class="modal-close" onclick="hideAddLinkModal()">×</button>
+    <!-- 自定义右键菜单 -->
+    <div class="context-menu" id="contextMenu">
+        <div class="menu-item" id="addToCategory">
+            <div class="menu-icon">➕</div>
+            <span>添加到分类</span>
+            <div class="submenu">
+                <!-- 动态生成分类列表 -->
             </div>
-            <form class="add-link-form" onsubmit="handleAddLink(event)">
-                <div class="form-group">
-                    <label>网站链接</label>
-                    <div class="url-input-group">
-                        <input type="url" id="linkUrl" placeholder="输入网站链接..." required>
-                        <button type="button" class="fetch-info-btn" onclick="fetchSiteInfo()">
-                            获取信息
-                        </button>
-                    </div>
-                </div>
-                <div class="site-info" id="siteInfo" style="display: none;">
-                    <div class="site-preview">
-                        <img id="siteIcon" src="" alt="" class="site-icon">
-                        <div class="site-details">
-                            <input type="text" id="linkName" placeholder="网站名称" required>
-                            <textarea id="linkDescription" placeholder="网站描述" rows="2"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>分类</label>
-                    <select id="linkCategory" required>
-                        <option value="">选择分类...</option>
-                        <option value="new">新建分类</option>
-                    </select>
-                    <input type="text" id="newCategory" placeholder="新分类名称" style="display: none;">
-                </div>
-                <div class="form-group">
-                    <label>主题颜色</label>
-                    <input type="color" id="linkColor" value="#ff6b9d">
-                </div>
-                <button type="submit" class="submit-btn">添加链接</button>
-            </form>
+        </div>
+        <div class="menu-item" id="createNewCategory">
+            <div class="menu-icon">📁</div>
+            <span>新建分类</span>
         </div>
     </div>
     

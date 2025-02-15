@@ -769,40 +769,108 @@ function updateDragFeedback(event) {
     }
 }
 
-// 显示添加链接模态框
-function showAddLinkModal() {
-    const modal = document.getElementById('addLinkModal');
-    modal.classList.add('show');
-}
-
-// 隐藏添加链接模态框
-function hideAddLinkModal() {
-    const modal = document.getElementById('addLinkModal');
-    modal.classList.remove('show');
-    // 清空表单
-    document.querySelector('.add-link-form').reset();
-    document.getElementById('siteInfo').style.display = 'none';
-}
-
-// 处理添加链接
-async function handleAddLink(event) {
-    event.preventDefault();
+// 右键菜单处理
+document.addEventListener('contextmenu', async function(e) {
+    e.preventDefault();
     
-    // 获取表单数据
-    const url = document.getElementById('linkUrl').value;
-    const name = document.getElementById('linkName').value;
-    const category = document.getElementById('linkCategory').value;
-    const newCategory = document.getElementById('newCategory').value;
-    const color = document.getElementById('linkColor').value;
+    // 获取选中的文本
+    const selectedText = window.getSelection().toString().trim();
+    if (!selectedText) return;
     
+    // 尝试从选中文本中提取URL
+    let url = '';
     try {
-        // 添加链接逻辑...
-        await addLink();
+        // 检查是否是URL
+        if (selectedText.startsWith('http://') || selectedText.startsWith('https://')) {
+            url = selectedText;
+        } else if (selectedText.includes('.')) {
+            // 如果包含点号，可能是没有协议的URL
+            url = 'https://' + selectedText;
+        }
+        new URL(url);
+    } catch {
+        showToast('请选择有效的网址', 'error');
+        return;
+    }
+    
+    // 显示右键菜单
+    const menu = document.getElementById('contextMenu');
+    menu.style.display = 'block';
+    menu.style.left = e.pageX + 'px';
+    menu.style.top = e.pageY + 'px';
+    
+    // 更新子菜单内容
+    const submenu = menu.querySelector('.submenu');
+    submenu.innerHTML = '';
+    
+    // 获取现有分类
+    const response = await fetch('/api/manage-links');
+    const data = await response.json();
+    const categories = Object.keys(data.links || {});
+    
+    // 生成分类列表
+    categories.forEach(category => {
+        const item = document.createElement('div');
+        item.className = 'menu-item';
+        item.innerHTML = `<span>${category}</span>`;
+        item.onclick = () => addToCategory(category, url);
+        submenu.appendChild(item);
+    });
+    
+    // 延迟添加show类以触发动画
+    requestAnimationFrame(() => menu.classList.add('show'));
+});
+
+// 点击其他地方关闭菜单
+document.addEventListener('click', function() {
+    const menu = document.getElementById('contextMenu');
+    menu.classList.remove('show');
+    setTimeout(() => menu.style.display = 'none', 200);
+});
+
+// 添加到分类
+async function addToCategory(category, url) {
+    try {
+        showToast('正在获取网站信息...', 'info');
         
-        // 关闭模态框
-        hideAddLinkModal();
+        // 获取网站信息
+        const response = await fetch(`/api/fetch-site-info?url=${encodeURIComponent(url)}`);
+        const data = await response.json();
+        
+        if (data.error) throw new Error(data.error);
+        
+        // 添加链接
+        await fetch('/api/manage-links', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+                action: 'add',
+                category,
+                link: {
+                    name: data.title || url,
+                    url: url,
+                    color: '#ff6b9d'
+                }
+            })
+        });
+        
+        // 刷新显示
+        await generateLinkGrid();
+        loadLinks();
         showToast('链接添加成功', 'success');
     } catch (error) {
-        showToast('添加链接失败', 'error');
+        showToast('添加链接失败: ' + error.message, 'error');
     }
-} 
+}
+
+// 新建分类
+document.getElementById('createNewCategory').onclick = async function() {
+    const category = prompt('请输入新分类名称：');
+    if (!category) return;
+    
+    const url = window.getSelection().toString().trim();
+    await addToCategory(category, url);
+}; 
