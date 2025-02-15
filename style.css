@@ -487,9 +487,8 @@ body {
 /* Toast通知优化 */
 #toastContainer {
     position: fixed;
-    top: 24px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 20px;
+    right: 20px;
     z-index: 99999;
     display: flex;
     flex-direction: column;
@@ -500,78 +499,84 @@ body {
 .toast {
     background: rgba(26, 27, 38, 0.95);
     color: #fff;
-    padding: 12px 24px;
+    padding: 12px 16px;
     border-radius: 8px;
     backdrop-filter: blur(8px);
     border: 1px solid var(--card-border);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    transform: translateY(-100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateX(120%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     pointer-events: auto;
     display: flex;
     align-items: center;
     gap: 12px;
+    min-width: 300px;
+    max-width: 380px;
 }
 
 .toast.show {
-    transform: translateY(0);
+    transform: translateX(0);
 }
 
 .toast.hide {
-    transform: translateY(-100%);
+    transform: translateX(120%);
 }
 
 .toast-icon {
     flex-shrink: 0;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .toast-message {
     font-size: 14px;
     line-height: 1.4;
     color: rgba(255, 255, 255, 0.9);
+    flex: 1;
 }
 
 /* Toast类型样式 */
 .toast-success {
-    border-left: 4px solid #43a047;
+    border-left: 4px solid #67c23a;
 }
 
 .toast-error {
-    border-left: 4px solid #d32f2f;
+    border-left: 4px solid #f56c6c;
 }
 
 .toast-info {
-    border-left: 4px solid #1976d2;
+    border-left: 4px solid #909399;
 }
 
 /* Toast动画优化 */
 @keyframes toastIn {
     from {
         opacity: 0;
-        transform: translateY(-120%);
+        transform: translateX(120%);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
     }
 }
 
 @keyframes toastOut {
     from {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
     }
     to {
         opacity: 0;
-        transform: translateY(-120%);
+        transform: translateX(120%);
     }
 }
 
 .toast.show {
-    animation: toastIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    animation: toastIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .toast.hide {
