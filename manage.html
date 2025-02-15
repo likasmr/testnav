@@ -13,14 +13,9 @@
     <div class="manage-container">
         <header class="manage-header">
             <h1>链接管理</h1>
-            <div class="header-actions">
-                <button onclick="location.href='index.html'" class="back-btn">
-                    返回首页
-                </button>
-                <button onclick="logout()" class="logout-btn">
-                    退出登录
-                </button>
-            </div>
+            <button onclick="window.location.href='index.html'" class="back-btn">
+                返回首页
+            </button>
         </header>
         
         <div class="manage-content">
@@ -44,28 +39,28 @@
                             </div>
                         </div>
                     </div>
-                    
                     <input type="color" id="linkColor" value="#ff6b9d">
                     <button onclick="addLink()" class="add-btn">添加链接</button>
                 </div>
             </div>
             
             <div class="manage-links-section">
-                <div class="section-header">
-                    <h2>管理链接</h2>
-                    <button onclick="resetToDefaultLinks()" class="reset-btn">
-                        恢复默认链接
-                    </button>
-                </div>
-                <div class="links-grid" id="manageLinksList">
+                <h2>管理现有链接</h2>
+                <div class="category-grid" id="manageLinksList">
                     <!-- 动态生成的链接列表 -->
                 </div>
+            </div>
+            
+            <div class="manage-actions">
+                <button onclick="resetToDefaultLinks()" class="reset-btn">
+                    🔄 恢复默认链接
+                </button>
             </div>
         </div>
     </div>
     
     <script src="config.js"></script>
     <script src="toast.js"></script>
-    <script src="script.js"></script>
+    <script src="manage.js"></script>
 </body>
 </html> 
