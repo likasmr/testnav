@@ -767,31 +767,4 @@ function updateDragFeedback(event) {
         feedback.style.left = event.pageX + 10 + 'px';
         feedback.style.top = event.pageY + 10 + 'px';
     }
-}
-
-function showToast(message, type = 'info') {
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    
-    // 定义不同类型的图标
-    const icons = {
-        success: `<svg viewBox="0 0 24 24" width="24" height="24" fill="#67c23a">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-        </svg>`,
-        error: `<svg viewBox="0 0 24 24" width="24" height="24" fill="#f56c6c">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-        </svg>`,
-        info: `<svg viewBox="0 0 24 24" width="24" height="24" fill="#909399">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-        </svg>`
-    };
-    
-    toast.innerHTML = `
-        <div class="toast-icon">
-            ${icons[type]}
-        </div>
-        <div class="toast-message">${message}</div>
-    `;
-    
-    // ... 其余代码保持不变
 } 

@@ -79,4 +79,52 @@ const toast = new Toast();
 // 导出便捷方法
 function showToast(message, type = 'info') {
     toast.show(message, type);
+}
+
+async function processToastQueue() {
+    if (toast.queue.length === 0 || toast.isProcessing) return;
+    
+    toast.isProcessing = true;
+    const { message, type } = toast.queue.shift();
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <div class="toast-content">
+            <span class="toast-icon">${toast.getIcon(type)}</span>
+            <span class="toast-message">${message}</span>
+        </div>
+        <div class="toast-progress"></div>
+    `;
+
+    document.body.appendChild(toast);
+    
+    // 强制重排以触发动画
+    toast.offsetHeight;
+    toast.classList.add('show');
+    
+    // 等待动画完成
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    
+    toast.classList.remove('show');
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    document.body.removeChild(toast);
+    toast.isProcessing = false;
+    
+    // 处理队列中的下一个 toast
+    processToastQueue();
+}
+
+function getIconForType(type) {
+    switch (type) {
+        case 'success':
+            return '✓';
+        case 'error':
+            return '✕';
+        case 'warning':
+            return '⚠';
+        default:
+            return 'ℹ';
+    }
 } 
