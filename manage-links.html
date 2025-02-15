@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>链接管理 - AnimeHome</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="config.js"></script>
+    <script src="toast.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="banner">
+            <h1>链接管理</h1>
+            <button class="back-btn" onclick="window.history.back()">返回</button>
+        </header>
+        
+        <!-- 原链接管理标签页内容 -->
+        <div class="links-manager">
+            <div class="setting-item">
+                <button onclick="resetToDefaultLinks()" class="reset-btn">
+                    🔄 恢复默认链接
+                </button>
+            </div>
+            <div class="setting-item">
+                <label>添加新链接：</label>
+                <select id="linkCategory">
+                    <option value="">选择分类...</option>
+                    <option value="new">新建分类</option>
+                </select>
+                <input type="text" id="newCategory" placeholder="新分类名称" style="display: none;">
+                <input type="text" id="linkUrl" placeholder="网站链接">
+                <button onclick="fetchSiteInfo()" class="fetch-info-btn">获取信息</button>
+                <div class="site-info" id="siteInfo" style="display: none;">
+                    <div class="site-preview">
+                        <img id="siteIcon" src="" alt="" class="site-icon">
+                        <div class="site-details">
+                            <input type="text" id="linkName" placeholder="网站名称">
+                            <textarea id="linkDescription" placeholder="网站描述" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <input type="color" id="linkColor" value="#ff6b9d">
+                <button onclick="addLink()" class="add-btn">添加链接</button>
+            </div>
+            <div class="links-list" id="manageLinksList">
+                <!-- 动态生成的链接列表 -->
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

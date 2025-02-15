@@ -769,54 +769,22 @@ function updateDragFeedback(event) {
     }
 }
 
-// 设置按钮交互
-document.querySelector('.settings-btn').addEventListener('mouseenter', () => {
-    document.getElementById('quickSettings').classList.add('show');
+// 设置按钮点击事件
+document.querySelector('.settings-btn').addEventListener('click', () => {
+    showModal('bgSettingsModal');
 });
 
-document.getElementById('quickSettings').addEventListener('mouseleave', () => {
-    document.getElementById('quickSettings').classList.remove('show');
-});
-
-// 背景设置对话框
-function showBackgroundDialog() {
-    const dialog = document.getElementById('backgroundDialog');
-    dialog.classList.add('show');
-    
-    // 加载当前设置
-    const currentBg = localStorage.getItem('bgImage');
-    const currentBlur = localStorage.getItem('bgBlur') || 5;
-    
-    document.getElementById('bgImageUrl').value = currentBg || '';
-    document.getElementById('bgBlur').value = currentBlur;
-    document.getElementById('blurValue').textContent = currentBlur + 'px';
-    
-    // 更新预览
-    updateBgPreview();
+// 显示弹窗
+function showModal(id) {
+    document.getElementById(id).classList.add('show');
 }
 
-function hideBackgroundDialog() {
-    document.getElementById('backgroundDialog').classList.remove('show');
+// 关闭弹窗
+function closeModal(id) {
+    document.getElementById(id).classList.remove('show');
 }
 
-function updateBgPreview() {
-    const url = document.getElementById('bgImageUrl').value;
-    const preview = document.getElementById('bgPreview');
-    
-    if (url) {
-        preview.style.backgroundImage = `url(${url})`;
-        preview.style.display = 'block';
-    } else {
-        preview.style.display = 'none';
-    }
-}
-
-// 链接管理器
-function showLinkManager() {
-    document.getElementById('linkManager').classList.add('show');
-    loadLinks(); // 加载链接列表
-}
-
-function hideLinkManager() {
-    document.getElementById('linkManager').classList.remove('show');
+// 链接管理独立页面
+function openLinkManager() {
+    window.open('/manage-links.html', '_blank');
 } 
