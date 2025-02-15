@@ -769,77 +769,97 @@ function updateDragFeedback(event) {
     }
 }
 
-// 右键菜单处理
-document.addEventListener('contextmenu', async function(e) {
-    e.preventDefault();
+// 更新链接管理界面
+function updateLinksManagement() {
+    const container = document.getElementById('categoryList');
+    container.innerHTML = '';
     
-    // 获取选中的文本
-    const selectedText = window.getSelection().toString().trim();
-    if (!selectedText) return;
-    
-    // 尝试从选中文本中提取URL
-    let url = '';
-    try {
-        // 检查是否是URL
-        if (selectedText.startsWith('http://') || selectedText.startsWith('https://')) {
-            url = selectedText;
-        } else if (selectedText.includes('.')) {
-            // 如果包含点号，可能是没有协议的URL
-            url = 'https://' + selectedText;
-        }
-        new URL(url);
-    } catch {
-        showToast('请选择有效的网址', 'error');
-        return;
+    for (const [category, items] of Object.entries(links)) {
+        const categoryEl = document.createElement('div');
+        categoryEl.className = 'category-item';
+        categoryEl.innerHTML = `
+            <div class="category-header">
+                <h3 class="category-title" contenteditable="true" 
+                    onblur="updateCategoryName('${category}', this.textContent)">
+                    ${category}
+                </h3>
+                <div class="category-actions">
+                    <button class="delete-btn" onclick="deleteCategory('${category}')">删除</button>
+                </div>
+            </div>
+            <div class="category-links">
+                ${items.map(item => `
+                    <div class="link-item-edit" data-url="${item.url}">
+                        <input type="text" class="link-name" value="${item.name}" 
+                               onchange="updateLink('${category}', '${item.url}', this)">
+                        <input type="text" class="link-url" value="${item.url}"
+                               onchange="updateLink('${category}', '${item.url}', this)">
+                        <input type="color" class="link-color" value="${item.color || '#ff6b9d'}"
+                               onchange="updateLink('${category}', '${item.url}', this)">
+                        <div class="link-actions">
+                            <button class="delete-btn" 
+                                    onclick="deleteLink('${category}', ${JSON.stringify(item).replace(/"/g, '&quot;')})">
+                                删除
+                            </button>
+                        </div>
+                    </div>
+                `).join('')}
+                <button class="add-link-btn" onclick="addNewLink('${category}')">
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                    添加新链接
+                </button>
+            </div>
+        `;
+        container.appendChild(categoryEl);
     }
-    
-    // 显示右键菜单
-    const menu = document.getElementById('contextMenu');
-    menu.style.display = 'block';
-    menu.style.left = e.pageX + 'px';
-    menu.style.top = e.pageY + 'px';
-    
-    // 更新子菜单内容
-    const submenu = menu.querySelector('.submenu');
-    submenu.innerHTML = '';
-    
-    // 获取现有分类
-    const response = await fetch('/api/manage-links');
-    const data = await response.json();
-    const categories = Object.keys(data.links || {});
-    
-    // 生成分类列表
-    categories.forEach(category => {
-        const item = document.createElement('div');
-        item.className = 'menu-item';
-        item.innerHTML = `<span>${category}</span>`;
-        item.onclick = () => addToCategory(category, url);
-        submenu.appendChild(item);
-    });
-    
-    // 延迟添加show类以触发动画
-    requestAnimationFrame(() => menu.classList.add('show'));
-});
+}
 
-// 点击其他地方关闭菜单
-document.addEventListener('click', function() {
-    const menu = document.getElementById('contextMenu');
-    menu.classList.remove('show');
-    setTimeout(() => menu.style.display = 'none', 200);
-});
-
-// 添加到分类
-async function addToCategory(category, url) {
+// 添加新分类
+async function addNewCategory() {
+    const name = await showPrompt('请输入分类名称');
+    if (!name) return;
+    
     try {
-        showToast('正在获取网站信息...', 'info');
+        await fetch('/api/manage-links', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+                action: 'addCategory',
+                category: name
+            })
+        });
         
+        await loadLinks();
+        updateLinksManagement();
+        showToast('分类添加成功', 'success');
+    } catch (error) {
+        showToast('添加分类失败', 'error');
+    }
+}
+
+// 添加新链接到分类
+async function addNewLink(category) {
+    const url = await showPrompt('请输入链接地址');
+    if (!url) return;
+    
+    try {
         // 获取网站信息
         const response = await fetch(`/api/fetch-site-info?url=${encodeURIComponent(url)}`);
         const data = await response.json();
         
         if (data.error) throw new Error(data.error);
         
-        // 添加链接
+        const link = {
+            name: data.title || url,
+            url: url,
+            color: '#ff6b9d'
+        };
+        
         await fetch('/api/manage-links', {
             method: 'POST',
             headers: {
@@ -849,28 +869,45 @@ async function addToCategory(category, url) {
             body: JSON.stringify({
                 action: 'add',
                 category,
-                link: {
-                    name: data.title || url,
-                    url: url,
-                    color: '#ff6b9d'
-                }
+                link
             })
         });
         
-        // 刷新显示
-        await generateLinkGrid();
-        loadLinks();
+        await loadLinks();
+        updateLinksManagement();
         showToast('链接添加成功', 'success');
     } catch (error) {
-        showToast('添加链接失败: ' + error.message, 'error');
+        showToast('添加链接失败', 'error');
     }
 }
 
-// 新建分类
-document.getElementById('createNewCategory').onclick = async function() {
-    const category = prompt('请输入新分类名称：');
-    if (!category) return;
+// 更新链接信息
+async function updateLink(category, originalUrl, input) {
+    const item = input.closest('.link-item-edit');
+    const newData = {
+        name: item.querySelector('.link-name').value,
+        url: item.querySelector('.link-url').value,
+        color: item.querySelector('.link-color').value
+    };
     
-    const url = window.getSelection().toString().trim();
-    await addToCategory(category, url);
-}; 
+    try {
+        await fetch('/api/manage-links', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+                action: 'update',
+                category,
+                originalUrl,
+                link: newData
+            })
+        });
+        
+        await loadLinks();
+        showToast('链接更新成功', 'success');
+    } catch (error) {
+        showToast('更新链接失败', 'error');
+    }
+} 

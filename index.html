@@ -48,28 +48,19 @@
                 </button>
             </div>
             <div class="setting-item">
-                <label>添加新链接：</label>
-                <select id="linkCategory">
-                    <option value="">选择分类...</option>
-                    <option value="new">新建分类</option>
-                </select>
-                <input type="text" id="newCategory" placeholder="新分类名称" style="display: none;">
-                <input type="text" id="linkUrl" placeholder="网站链接">
-                <button onclick="fetchSiteInfo()" class="fetch-info-btn">获取信息</button>
-                <div class="site-info" id="siteInfo" style="display: none;">
-                    <div class="site-preview">
-                        <img id="siteIcon" src="" alt="" class="site-icon">
-                        <div class="site-details">
-                            <input type="text" id="linkName" placeholder="网站名称">
-                            <textarea id="linkDescription" placeholder="网站描述" rows="2"></textarea>
-                        </div>
+                <div class="links-management">
+                    <div class="links-management-header">
+                        <button class="add-category-btn" onclick="addNewCategory()">
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            </svg>
+                            添加新分类
+                        </button>
+                    </div>
+                    <div class="category-list" id="categoryList">
+                        <!-- 分类和链接将在这里动态生成 -->
                     </div>
                 </div>
-                <input type="color" id="linkColor" value="#ff6b9d">
-                <button onclick="addLink()" class="add-btn">添加链接</button>
-            </div>
-            <div class="links-list" id="manageLinksList">
-                <!-- 动态生成的链接列表 -->
             </div>
         </div>
         
@@ -113,21 +104,6 @@
                 <button class="cancel-btn" onclick="hideConfirmDialog()">取消</button>
                 <button class="confirm-btn" onclick="confirmLogout()">确认退出</button>
             </div>
-        </div>
-    </div>
-    
-    <!-- 自定义右键菜单 -->
-    <div class="context-menu" id="contextMenu">
-        <div class="menu-item" id="addToCategory">
-            <div class="menu-icon">➕</div>
-            <span>添加到分类</span>
-            <div class="submenu">
-                <!-- 动态生成分类列表 -->
-            </div>
-        </div>
-        <div class="menu-item" id="createNewCategory">
-            <div class="menu-icon">📁</div>
-            <span>新建分类</span>
         </div>
     </div>
     
