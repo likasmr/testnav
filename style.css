@@ -303,16 +303,15 @@ body {
     position: fixed;
     top: 0;
     right: -100%;
-    width: 90%;
+    width: 100%;
     max-width: 400px;
-    height: 100%;
+    height: 100vh;
+    padding: 1.5rem;
     background: rgba(26, 27, 38, 0.98);
     backdrop-filter: blur(10px);
     border-left: 1px solid var(--card-border);
-    padding: 2rem;
     transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1000;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
 }
@@ -321,88 +320,56 @@ body {
     right: 0;
 }
 
-/* 添加箭头指示器 */
-.settings-panel::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    right: 20px;
-    width: 16px;
-    height: 16px;
-    background: rgba(26, 27, 38, 0.98);
-    transform: rotate(45deg);
-    border-left: 1px solid var(--card-border);
-    border-top: 1px solid var(--card-border);
-}
-
+/* 标题区域 */
 .settings-panel h3 {
-    color: var(--heading-color);
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.2rem;
+    margin: 0 0 1rem 0;
 }
 
-.setting-item {
-    margin-bottom: 15px;
+/* 标签页容器 */
+.settings-tabs {
+    margin-bottom: 1rem;
 }
 
-.setting-item label {
+/* 标签页内容区域 */
+.tab-content {
+    display: none;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.tab-content.active {
     display: block;
-    margin-bottom: 5px;
-    color: var(--text-color);
 }
 
-.setting-item input[type="text"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    background: rgba(41, 42, 58, 0.9);
-    color: var(--text-color);
-    margin-bottom: 5px;
+/* 自定义滚动条 */
+.tab-content::-webkit-scrollbar {
+    width: 6px;
 }
 
-.setting-item input[type="range"] {
-    width: 100%;
-    margin: 10px 0;
+.tab-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
 }
 
-.setting-item button {
-    background: linear-gradient(45deg, #ff6b9d, #b48ead);
-    border: none;
-    padding: 8px 15px;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    transition: opacity 0.3s;
+.tab-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
 }
 
-.setting-item button:hover {
-    opacity: 0.9;
+.tab-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
-.share-btn {
-    width: 100%;
-    background: linear-gradient(45deg, #b48ead, #8fbcbb) !important;
-    margin-top: 10px;
+/* 链接管理列表 */
+.links-list {
+    margin-bottom: 1rem;
 }
 
-.share-btn:hover {
-    opacity: 0.9;
-}
-
-.button-group {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-}
-
-.button-group button {
-    flex: 1;
-}
-
-.default-btn {
-    background: linear-gradient(45deg, #8fbcbb, #88c0d0) !important;
+/* 退出按钮固定在底部 */
+.setting-item:last-child {
+    margin-top: auto;
+    padding-top: 1rem;
 }
 
 /* 登录遮罩 */
@@ -607,32 +574,11 @@ body {
 }
 
 .tab-content {
-    flex: 1;
-    overflow-y: auto;
-    padding-right: 10px; /* 为滚动条留出空间 */
+    display: none;
 }
 
 .tab-content.active {
     display: block;
-}
-
-/* 美化滚动条 */
-.tab-content::-webkit-scrollbar {
-    width: 6px;
-}
-
-.tab-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-}
-
-.tab-content::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 3px;
-}
-
-.tab-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
 }
 
 /* 链接管理样式 */
@@ -640,7 +586,6 @@ body {
     max-height: 300px;
     overflow-y: auto;
     margin-top: 16px;
-    margin-bottom: 2rem;
 }
 
 .link-item-manage {
@@ -943,10 +888,4 @@ body {
 
 .delete-confirm-btn:hover {
     box-shadow: 0 4px 12px rgba(191, 97, 106, 0.3) !important;
-}
-
-/* 调整退出按钮位置 */
-.setting-item:last-child {
-    margin-top: auto;
-    padding-top: 1rem;
 } 
